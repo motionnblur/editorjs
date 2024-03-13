@@ -17,6 +17,7 @@ body {
   width: 70px;
   height: 70px;
   user-select: none;
+  z-index: 5;
 }
 
 .onMouseDownAnim {
@@ -24,4 +25,10 @@ body {
 }
 .onMouseDownAnim:hover {
   transform: scale(1.05);
+}
+.selection-area {
+  position: absolute;
+  background-color: rgba(166, 228, 247, 0.5);
+  z-index: 1;
+  border-radius: 100%;
 }

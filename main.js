@@ -75,12 +75,16 @@ function onMouseDownRoot(e) {
 }
 function onMouseUpRoot() {
   console.log("mouse up root page");
+  selectionArea.style.zIndex = 1;
+  currentSelectedSprite.style.zIndex = 5;
   currentSelectedSprite = null;
 }
 
 function onMouseDownSprite(e) {
   console.log("mouse down sprite");
   currentSelectedSprite = this;
+  currentSelectedSprite.style.zIndex = 100;
+
   currentSpriteTemp = this;
   const leftInt = parseInt(this.style.left);
   const topInt = parseInt(this.style.top);
@@ -115,6 +119,7 @@ function isMouseOnSprite(e) {
 function addSelectionAreaToSprite() {
   if (selectionArea) {
     selectionArea.style.display = "block";
+    selectionArea.style.zIndex = 99;
   }
   selectionArea.style.left =
     currentSpriteTemp.offsetLeft - selectionAreaWidth / 2 + "px";

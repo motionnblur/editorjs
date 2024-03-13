@@ -1,16 +1,22 @@
 /////// variables
+var _root;
 var currentSelectedSprite;
+var currentSpriteTemp;
 var offset = {
   x: 0,
   y: 0,
 };
+var selectionAreaWidth = 40;
+var selectionArea = document.createElement("div");
+selectionArea.classList.add("selection-area");
 ////// variables
 
 document.addEventListener("DOMContentLoaded", function (event) {
-  var _root = document.getElementById("root");
+  _root = document.getElementById("root");
   _root.addEventListener("mousedown", onMouseDownRoot);
   _root.addEventListener("mouseup", onMouseUpRoot);
   _root.addEventListener("mousemove", onMouseMoveRoot);
+  window.addEventListener("keydown", onKeyDownRoot);
 });
 
 function dropHandler(ev) {
@@ -46,11 +52,26 @@ function dropHandler(ev) {
   }
 }
 
+function onKeyDownRoot(e) {
+  console.log("keydown");
+  if (e.key === "Delete") {
+    if (currentSpriteTemp) {
+      currentSpriteTemp.remove();
+      if (selectionArea) {
+        selectionArea.style.display = "none";
+      }
+    }
+  }
+}
 function dragOverHandler(ev) {
   ev.preventDefault();
 }
-function onMouseDownRoot() {
+function onMouseDownRoot(e) {
   console.log("mouse down root page");
+  if (currentSpriteTemp && !isMouseOnSprite(e)) {
+    currentSpriteTemp = null;
+    selectionArea.style.display = "none";
+  }
 }
 function onMouseUpRoot() {
   console.log("mouse up root page");
@@ -59,19 +80,50 @@ function onMouseUpRoot() {
 
 function onMouseDownSprite(e) {
   console.log("mouse down sprite");
-  console.log(e);
   currentSelectedSprite = this;
+  currentSpriteTemp = this;
   const leftInt = parseInt(this.style.left);
   const topInt = parseInt(this.style.top);
   offset = {
     x: e.clientX - leftInt,
     y: e.clientY - topInt,
   };
-  console.log(offset);
+
+  addSelectionAreaToSprite(currentSpriteTemp);
 }
 function onMouseMoveRoot(e) {
   if (currentSelectedSprite) {
     currentSelectedSprite.style.left = e.clientX - offset.x + "px";
     currentSelectedSprite.style.top = e.clientY - offset.y + "px";
+    if (selectionArea) {
+      selectionArea.style.left =
+        e.clientX - offset.x - selectionAreaWidth / 2 + "px";
+      selectionArea.style.top =
+        e.clientY - offset.y - selectionAreaWidth / 2 + "px";
+    }
   }
+}
+
+function isMouseOnSprite(e) {
+  return (
+    e.clientX >= currentSpriteTemp.offsetLeft &&
+    e.clientX <= currentSpriteTemp.offsetLeft + currentSpriteTemp.offsetWidth &&
+    e.clientY >= currentSpriteTemp.offsetTop &&
+    e.clientY <= currentSpriteTemp.offsetTop + currentSpriteTemp.offsetHeight
+  );
+}
+function addSelectionAreaToSprite() {
+  if (selectionArea) {
+    selectionArea.style.display = "block";
+  }
+  selectionArea.style.left =
+    currentSpriteTemp.offsetLeft - selectionAreaWidth / 2 + "px";
+  selectionArea.style.top =
+    currentSpriteTemp.offsetTop - selectionAreaWidth / 2 + "px";
+  selectionArea.style.width =
+    currentSpriteTemp.offsetWidth + selectionAreaWidth + "px";
+  selectionArea.style.height =
+    currentSpriteTemp.offsetHeight + selectionAreaWidth + "px";
+  selectionArea.style.position = "absolute";
+  _root.appendChild(selectionArea);
 }

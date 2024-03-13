@@ -1,3 +1,5 @@
+const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+
 /////// variables
 var _root;
 var currentSelectedSprite;
@@ -76,8 +78,10 @@ function onMouseDownRoot(e) {
 function onMouseUpRoot() {
   console.log("mouse up root page");
   selectionArea.style.zIndex = 1;
-  currentSelectedSprite.style.zIndex = 5;
-  currentSelectedSprite = null;
+  if (currentSelectedSprite) {
+    currentSelectedSprite.style.zIndex = 5;
+    currentSelectedSprite = null;
+  }
 }
 
 function onMouseDownSprite(e) {
@@ -97,13 +101,19 @@ function onMouseDownSprite(e) {
 }
 function onMouseMoveRoot(e) {
   if (currentSelectedSprite) {
-    currentSelectedSprite.style.left = e.clientX - offset.x + "px";
-    currentSelectedSprite.style.top = e.clientY - offset.y + "px";
+    currentSelectedSprite.style.left =
+      clamp(e.clientX - offset.x, 0, window.innerWidth - 70) + "px";
+    currentSelectedSprite.style.top =
+      clamp(e.clientY - offset.y, 0, window.innerHeight - 70) + "px";
     if (selectionArea) {
       selectionArea.style.left =
-        e.clientX - offset.x - selectionAreaWidth / 2 + "px";
+        parseInt(currentSelectedSprite.style.left) -
+        selectionAreaWidth / 2 +
+        "px";
       selectionArea.style.top =
-        e.clientY - offset.y - selectionAreaWidth / 2 + "px";
+        parseInt(currentSelectedSprite.style.top) -
+        selectionAreaWidth / 2 +
+        "px";
     }
   }
 }

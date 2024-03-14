@@ -19,15 +19,13 @@ var selectionBoxLeft,
 var isMouseEnterSelectionBox = false;
 var isResizeSprite = false;
 var currentResizeBox;
+var spriteObj;
+var _Editor;
 ////// variables
 
-document.addEventListener("DOMContentLoaded", function (event) {
-  _root = document.getElementById("root");
-  _root.addEventListener("mousedown", onMouseDownRoot);
-  _root.addEventListener("mouseup", onMouseUpRoot);
-  _root.addEventListener("mousemove", onMouseMoveRoot);
-  window.addEventListener("keydown", onKeyDownRoot);
+_Editor = new Editor(document);
 
+document.addEventListener("DOMContentLoaded", function () {
   selectionBoxLeft = document.getElementById("selection-box-left");
   selectionBoxTop = document.getElementById("selection-box-top");
   selectionBoxRight = document.getElementById("selection-box-right");
@@ -74,20 +72,11 @@ function dropHandler(ev) {
         const file = item.getAsFile();
 
         var img = document.createElement("img");
-        var src = document.getElementById("root");
         img.src = URL.createObjectURL(file);
-        img.draggable = false;
+        spriteObj = new Sprite(img, ev);
 
-        img.classList.add("img");
-        img.classList.add("onMouseDownAnim");
-
-        img.style.position = "absolute";
-        img.style.left = ev.clientX + "px";
-        img.style.top = ev.clientY + "px";
-
-        img.addEventListener("mousedown", onMouseDownSprite);
-
-        src.appendChild(img);
+        var src = document.getElementById("root");
+        src.appendChild(spriteObj.GetImage());
       }
     });
   } else {

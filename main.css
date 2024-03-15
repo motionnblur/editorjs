@@ -41,7 +41,7 @@ body {
   left: 0;
   top: 0;
   cursor: pointer;
-  display: none;
+  /*display: none; */
 }
 .selection-box:hover {
   background-color: green;

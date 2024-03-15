@@ -1,302 +1,13 @@
 const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
 /////// variables
-var _root;
-var currentSelectedSprite;
-var currentSpriteTemp;
-var offset = {
-  x: 0,
-  y: 0,
-};
-var selectionAreaWidth = 40;
 var selectionArea = document.createElement("div");
 selectionArea.classList.add("selection-area");
-var selectionBoxLeft,
-  selectionBoxLeftTop,
-  selectionBoxRight,
-  selectionBoxBottom;
-
-var isMouseEnterSelectionBox = false;
-var isResizeSprite = false;
-var currentResizeBox;
+var _Editor;
 ////// variables
 
-document.addEventListener("DOMContentLoaded", function (event) {
-  _root = document.getElementById("root");
-  _root.addEventListener("mousedown", onMouseDownRoot);
-  _root.addEventListener("mouseup", onMouseUpRoot);
-  _root.addEventListener("mousemove", onMouseMoveRoot);
-  window.addEventListener("keydown", onKeyDownRoot);
+_Editor = new Editor(document);
 
-  selectionBoxLeft = document.getElementById("selection-box-left");
-  selectionBoxTop = document.getElementById("selection-box-top");
-  selectionBoxRight = document.getElementById("selection-box-right");
-  selectionBoxBottom = document.getElementById("selection-box-bottom");
-
-  selectionBoxLeft.addEventListener("mousedown", onMouseDownSelectionBoxLeft);
-  selectionBoxTop.addEventListener("mousedown", onMouseDownSelectionBoxTop);
-  selectionBoxRight.addEventListener("mousedown", onMouseDownSelectionBoxRight);
-  selectionBoxBottom.addEventListener(
-    "mousedown",
-    onMouseDownSelectionBoxBottom
-  );
-
-  selectionBoxLeft.addEventListener("mouseenter", onMouseEnterSelectionBoxLeft);
-  selectionBoxTop.addEventListener("mouseenter", onMouseEnterSelectionBoxTop);
-  selectionBoxRight.addEventListener(
-    "mouseenter",
-    onMouseEnterSelectionBoxRight
-  );
-  selectionBoxBottom.addEventListener(
-    "mouseenter",
-    onMouseEnterSelectionBoxBottom
-  );
-
-  selectionBoxLeft.addEventListener("mouseleave", onMouseLeaveSelectionBoxLeft);
-  selectionBoxTop.addEventListener("mouseleave", onMouseLeaveSelectionBoxTop);
-  selectionBoxRight.addEventListener(
-    "mouseleave",
-    onMouseLeaveSelectionBoxRight
-  );
-  selectionBoxBottom.addEventListener(
-    "mouseleave",
-    onMouseLeaveSelectionBoxBottom
-  );
-});
-
-function dropHandler(ev) {
-  console.log("File(s) dropped");
-  ev.preventDefault();
-
-  if (ev.dataTransfer.items) {
-    [...ev.dataTransfer.items].forEach((item, i) => {
-      if (item.kind === "file" && item.type === "image/png") {
-        const file = item.getAsFile();
-
-        var img = document.createElement("img");
-        var src = document.getElementById("root");
-        img.src = URL.createObjectURL(file);
-        img.draggable = false;
-
-        img.classList.add("img");
-        img.classList.add("onMouseDownAnim");
-
-        img.style.position = "absolute";
-        img.style.left = ev.clientX + "px";
-        img.style.top = ev.clientY + "px";
-
-        img.addEventListener("mousedown", onMouseDownSprite);
-
-        src.appendChild(img);
-      }
-    });
-  } else {
-    [...ev.dataTransfer.files].forEach((file, i) => {
-      //
-    });
-  }
-}
-
-function onKeyDownRoot(e) {
-  console.log("keydown");
-  if (e.key === "Delete") {
-    if (currentSpriteTemp) {
-      currentSpriteTemp.remove();
-      if (selectionArea) {
-        selectionArea.style.display = "none";
-        hideSelectionBoxes();
-      }
-    }
-  }
-}
-function dragOverHandler(ev) {
-  ev.preventDefault();
-}
-function onMouseDownRoot(e) {
-  console.log("mouse down root page");
-  if (isMouseEnterSelectionBox) return;
-
-  if (currentSpriteTemp && !isMouseOnSprite(e)) {
-    currentSpriteTemp = null;
-    hideSelectionArea();
-  }
-}
-function onMouseUpRoot() {
-  console.log("mouse up root page");
-  selectionArea.style.zIndex = 1;
-  if (currentSelectedSprite) {
-    currentSelectedSprite.style.zIndex = 5;
-    currentSelectedSprite = null;
-  }
-  isResizeSprite = false;
-}
-
-function onMouseDownSprite(e) {
-  showSelectionBoxes();
-
-  console.log("mouse down sprite");
-  currentSelectedSprite = this;
-  currentSelectedSprite.style.zIndex = 100;
-
-  currentSpriteTemp = this;
-  const leftInt = parseFloat(this.style.left);
-  const topInt = parseFloat(this.style.top);
-  offset = {
-    x: e.clientX - leftInt,
-    y: e.clientY - topInt,
-  };
-
-  addSelectionAreaToSprite(currentSpriteTemp);
-}
-function onMouseMoveRoot(e) {
-  if (currentSelectedSprite) {
-    moveSprite(e);
-  }
-  if (isResizeSprite) {
-    resizeSprite(e);
-  }
-}
-
-function isMouseOnSprite(e) {
-  return (
-    e.clientX >= currentSpriteTemp.offsetLeft &&
-    e.clientX <= currentSpriteTemp.offsetLeft + currentSpriteTemp.offsetWidth &&
-    e.clientY >= currentSpriteTemp.offsetTop &&
-    e.clientY <= currentSpriteTemp.offsetTop + currentSpriteTemp.offsetHeight
-  );
-}
-function addSelectionAreaToSprite() {
-  if (selectionArea) {
-    selectionArea.style.display = "block";
-    selectionArea.style.zIndex = 99;
-  }
-  selectionArea.style.left =
-    currentSpriteTemp.offsetLeft - selectionAreaWidth / 2 + "px";
-  selectionArea.style.top =
-    currentSpriteTemp.offsetTop - selectionAreaWidth / 2 + "px";
-  selectionArea.style.width =
-    currentSpriteTemp.offsetWidth + selectionAreaWidth + "px";
-  selectionArea.style.height =
-    currentSpriteTemp.offsetHeight + selectionAreaWidth + "px";
-  selectionArea.style.position = "absolute";
-  _root.appendChild(selectionArea);
-
-  addSelectionBoxesToSelectionArea();
-}
-
-function showSelectionBoxes() {
-  selectionBoxLeft.style.display = "block";
-  selectionBoxTop.style.display = "block";
-  selectionBoxRight.style.display = "block";
-  selectionBoxBottom.style.display = "block";
-}
-
-function hideSelectionArea() {
-  selectionArea.style.display = "none";
-  hideSelectionBoxes();
-}
-function hideSelectionBoxes() {
-  selectionBoxLeft.style.display = "none";
-  selectionBoxTop.style.display = "none";
-  selectionBoxRight.style.display = "none";
-  selectionBoxBottom.style.display = "none";
-}
-
-function moveSprite(e) {
-  currentSelectedSprite.style.left =
-    clamp(e.clientX - offset.x, 0, window.innerWidth - 70) + "px";
-  currentSelectedSprite.style.top =
-    clamp(e.clientY - offset.y, 0, window.innerHeight - 70) + "px";
-  if (selectionArea) {
-    moveSelectionArea(e);
-  }
-}
-
-function addSelectionBoxesToSelectionArea() {
-  selectionBoxLeft.style.left = parseFloat(selectionArea.style.left) + "px";
-  selectionBoxLeft.style.top =
-    parseFloat(selectionArea.style.top) +
-    parseFloat(selectionArea.style.width) / 2 -
-    7.5 +
-    "px";
-
-  selectionBoxTop.style.left =
-    parseFloat(selectionArea.style.left) +
-    parseFloat(selectionArea.style.width) / 2 -
-    7.5 +
-    "px";
-  selectionBoxTop.style.top = parseFloat(selectionArea.style.top) + "px";
-
-  selectionBoxRight.style.left =
-    parseFloat(selectionArea.style.left) +
-    parseFloat(selectionArea.style.width) -
-    15 +
-    "px";
-  selectionBoxRight.style.top =
-    parseFloat(selectionArea.style.top) +
-    parseFloat(selectionArea.style.width) / 2 -
-    7.5 +
-    "px";
-
-  selectionBoxBottom.style.left =
-    parseFloat(selectionArea.style.left) +
-    parseFloat(selectionArea.style.width) / 2 -
-    7.5 +
-    "px";
-  selectionBoxBottom.style.top =
-    parseFloat(selectionArea.style.top) +
-    parseFloat(selectionArea.style.width) -
-    15 +
-    "px";
-}
-
-function moveSelectionArea(e) {
-  selectionArea.style.left =
-    parseFloat(currentSelectedSprite.style.left) -
-    selectionAreaWidth / 2 +
-    "px";
-  selectionArea.style.top =
-    parseFloat(currentSelectedSprite.style.top) - selectionAreaWidth / 2 + "px";
-
-  moveSelectionBoxes(e);
-}
-function moveSelectionBoxes(e) {
-  selectionBoxLeft.style.left = parseFloat(selectionArea.style.left) + "px";
-  selectionBoxLeft.style.top =
-    parseFloat(selectionArea.style.top) +
-    parseFloat(selectionArea.style.width) / 2 -
-    7.5 +
-    "px";
-
-  selectionBoxTop.style.left =
-    parseFloat(selectionArea.style.left) +
-    parseFloat(selectionArea.style.width) / 2 -
-    7.5 +
-    "px";
-  selectionBoxTop.style.top = parseFloat(selectionArea.style.top) + "px";
-
-  selectionBoxRight.style.left =
-    parseFloat(selectionArea.style.left) +
-    parseFloat(selectionArea.style.width) -
-    15 +
-    "px";
-  selectionBoxRight.style.top =
-    parseFloat(selectionArea.style.top) +
-    parseFloat(selectionArea.style.width) / 2 -
-    7.5 +
-    "px";
-
-  selectionBoxBottom.style.left =
-    parseFloat(selectionArea.style.left) +
-    parseFloat(selectionArea.style.width) / 2 -
-    7.5 +
-    "px";
-  selectionBoxBottom.style.top =
-    parseFloat(selectionArea.style.top) +
-    parseFloat(selectionArea.style.width) -
-    15 +
-    "px";
-}
 function resizeSprite(e) {
   if (currentResizeBox === selectionBoxRight) {
     currentResizeBox.style.left = e.clientX - 7.5 + "px";
@@ -356,53 +67,31 @@ function resizeSprite(e) {
   }
 }
 
-function onMouseDownSelectionBoxBottom() {
-  if (isMouseEnterSelectionBox) {
-    isResizeSprite = true;
-    currentResizeBox = selectionBoxBottom;
-  }
+function dragOverHandler(ev) {
+  ev.preventDefault();
 }
-function onMouseDownSelectionBoxTop() {
-  if (isMouseEnterSelectionBox) {
-    isResizeSprite = true;
-    currentResizeBox = selectionBoxDown;
-  }
-}
-function onMouseDownSelectionBoxLeft() {
-  if (isMouseEnterSelectionBox) {
-    isResizeSprite = true;
-    currentResizeBox = selectionBoxLeft;
-  }
-}
-function onMouseDownSelectionBoxRight() {
-  if (isMouseEnterSelectionBox) {
-    isResizeSprite = true;
-    currentResizeBox = selectionBoxRight;
-  }
-}
+function dropHandler(ev) {
+  console.log("File(s) dropped");
+  ev.preventDefault();
 
-function onMouseEnterSelectionBoxLeft() {
-  isMouseEnterSelectionBox = true;
-}
-function onMouseEnterSelectionBoxTop() {
-  isMouseEnterSelectionBox = true;
-}
-function onMouseEnterSelectionBoxRight() {
-  isMouseEnterSelectionBox = true;
-}
-function onMouseEnterSelectionBoxBottom() {
-  isMouseEnterSelectionBox = true;
-}
+  if (ev.dataTransfer.items) {
+    [...ev.dataTransfer.items].forEach((item, i) => {
+      if (item.kind === "file" && item.type === "image/png") {
+        const file = item.getAsFile();
 
-function onMouseLeaveSelectionBoxLeft() {
-  isMouseEnterSelectionBox = false;
-}
-function onMouseLeaveSelectionBoxTop() {
-  isMouseEnterSelectionBox = false;
-}
-function onMouseLeaveSelectionBoxRight() {
-  isMouseEnterSelectionBox = false;
-}
-function onMouseLeaveSelectionBoxBottom() {
-  isMouseEnterSelectionBox = false;
+        var img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+
+        const spriteObj = new Sprite(img, ev, 70, 70);
+        _Editor.addSprite(spriteObj);
+
+        var src = document.getElementById("root");
+        src.appendChild(spriteObj.GetImage());
+      }
+    });
+  } else {
+    [...ev.dataTransfer.files].forEach((file, i) => {
+      //
+    });
+  }
 }

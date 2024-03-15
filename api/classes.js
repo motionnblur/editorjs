@@ -49,6 +49,7 @@ class Editor {
             y: e.clientY,
           };
           this.DrawSelectArea(firstAreaPos, lastAreaPos);
+          this.DoSelect(firstAreaPos, lastAreaPos);
         }
         if (this.currentSelectedSprite && this.currentSelectedSprite.movable) {
           this.currentSelectedSprite.SetPos(e.clientX, e.clientY);
@@ -97,6 +98,28 @@ class Editor {
     this.selectAreaDiv.style.top = top + "px";
     this.selectAreaDiv.style.width = width + "px";
     this.selectAreaDiv.style.height = height + "px";
+  }
+  DoSelect(firstAreaPos, lastAreaPos) {
+    const minX = Math.min(firstAreaPos.x, lastAreaPos.x);
+    const maxX = Math.max(firstAreaPos.x, lastAreaPos.x);
+    const minY = Math.min(firstAreaPos.y, lastAreaPos.y);
+    const maxY = Math.max(firstAreaPos.y, lastAreaPos.y);
+
+    this.sprites.forEach((sprite) => {
+      const spriteCenterX = sprite.posX + sprite.width / 2;
+      const spriteCenterY = sprite.posY + sprite.height / 2;
+
+      if (
+        spriteCenterX >= minX &&
+        spriteCenterX <= maxX &&
+        spriteCenterY >= minY &&
+        spriteCenterY <= maxY
+      ) {
+        sprite.SelectSprite();
+      } else {
+        sprite.DeSelectSprite();
+      }
+    });
   }
   ClearSelectArea() {
     this.selectAreaDiv.style.left = 0 + "px";

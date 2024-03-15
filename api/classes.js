@@ -1,6 +1,15 @@
 var _root;
 var _editor;
 var mouseOnElement = false;
+var firstAreaPos = {
+  x: 0,
+  y: 0,
+};
+var lastAreaPos = {
+  x: 0,
+  y: 0,
+};
+var rootMouseDown = false;
 
 class Editor {
   sprites = new Array();
@@ -9,7 +18,14 @@ class Editor {
     this.currentSelectedSprite = null;
     document.addEventListener("DOMContentLoaded", () => {
       _root = document.getElementById("root");
-      _root.addEventListener("mousedown", () => {
+      _root.addEventListener("mousedown", (e) => {
+        this.selectAreaDiv.style.display = "block";
+        rootMouseDown = true;
+        firstAreaPos = {
+          x: e.clientX,
+          y: e.clientY,
+        };
+
         if (!mouseOnElement) {
           this.sprites.forEach((sprite) => {
             sprite.DeSelectSprite();
@@ -17,19 +33,31 @@ class Editor {
         }
       });
       _root.addEventListener("mouseup", () => {
+        rootMouseDown = false;
         mouseOnElement = false;
+        this.selectAreaDiv.style.display = "none";
+        this.ClearSelectArea();
 
         if (this.currentSelectedSprite) {
           this.currentSelectedSprite.StopDrag();
         }
       });
       _root.addEventListener("mousemove", (e) => {
+        if (rootMouseDown) {
+          lastAreaPos = {
+            x: e.clientX,
+            y: e.clientY,
+          };
+          this.DrawSelectArea(firstAreaPos, lastAreaPos);
+        }
         if (this.currentSelectedSprite && this.currentSelectedSprite.movable) {
           this.currentSelectedSprite.SetPos(e.clientX, e.clientY);
         }
       });
       window.addEventListener("keydown", this.handleKeyDown.bind(this));
+      this.selectAreaDiv = document.getElementById("group-select");
     });
+
     _editor = this;
   }
   addSprite(sprite) {
@@ -58,6 +86,23 @@ class Editor {
         });
       }
     }
+  }
+  DrawSelectArea(firstAreaPos, lastAreaPos) {
+    const top = Math.min(firstAreaPos.y, lastAreaPos.y);
+    const left = Math.min(firstAreaPos.x, lastAreaPos.x);
+    const width = Math.abs(lastAreaPos.x - firstAreaPos.x);
+    const height = Math.abs(lastAreaPos.y - firstAreaPos.y);
+
+    this.selectAreaDiv.style.left = left + "px";
+    this.selectAreaDiv.style.top = top + "px";
+    this.selectAreaDiv.style.width = width + "px";
+    this.selectAreaDiv.style.height = height + "px";
+  }
+  ClearSelectArea() {
+    this.selectAreaDiv.style.left = 0 + "px";
+    this.selectAreaDiv.style.top = 0 + "px";
+    this.selectAreaDiv.style.width = 0 + "px";
+    this.selectAreaDiv.style.height = 0 + "px";
   }
 }
 /////////////////////////////////////////

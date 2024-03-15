@@ -46,3 +46,12 @@ body {
 .selection-box:hover {
   background-color: green;
 }
+
+#group-select {
+  position: absolute;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  background-color: rgba(174, 222, 245, 0.3);
+  display: none;
+}

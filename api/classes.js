@@ -175,25 +175,29 @@ class SelectionArea {
       selectionBoxLeftDiv,
       this.posX,
       this.posY + this.height / 2,
-      this
+      this,
+      "left"
     );
     this.selectionBoxTop = new SelectionBox(
       selectionBoxTopDiv,
       this.posX + this.width / 2,
       this.posY,
-      this
+      this,
+      "top"
     );
     this.selectionBoxRight = new SelectionBox(
       selectionBoxRightDiv,
       this.posX + this.width,
       this.posY + this.height / 2,
-      this
+      this,
+      "right"
     );
     this.selectionBoxBottom = new SelectionBox(
       selectionBoxBottomDiv,
       this.posX + this.width / 2,
       this.posY + this.height,
-      this
+      this,
+      "bottom"
     );
   }
   updatePos(x, y) {
@@ -249,7 +253,9 @@ class SelectionArea {
 }
 ///////////////////////////////////////////
 class SelectionBox {
-  constructor(image, x, y, selectionArea) {
+  constructor(image, x, y, selectionArea, name) {
+    this.name = name;
+
     this.selectionArea = selectionArea;
     this.image = image;
 
@@ -265,6 +271,10 @@ class SelectionBox {
 
     this.posX = newXPos;
     this.posY = newYPos;
+
+    this.image.addEventListener("mousedown", () => {
+      mouseOnElement = true;
+    });
   }
   updatePos(x, y) {
     const halfWidth = this.width / 2;

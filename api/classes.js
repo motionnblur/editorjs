@@ -19,17 +19,16 @@ class Editor {
     document.addEventListener("DOMContentLoaded", () => {
       _root = document.getElementById("root");
       _root.addEventListener("mousedown", (e) => {
-        this.selectAreaDiv.style.display = "block";
-        rootMouseDown = true;
-        firstAreaPos = {
-          x: e.clientX,
-          y: e.clientY,
-        };
-
         if (!mouseOnElement) {
           this.sprites.forEach((sprite) => {
             sprite.DeSelectSprite();
           });
+          this.selectAreaDiv.style.display = "block";
+          rootMouseDown = true;
+          firstAreaPos = {
+            x: e.clientX,
+            y: e.clientY,
+          };
         }
       });
       _root.addEventListener("mouseup", () => {
@@ -73,7 +72,7 @@ class Editor {
   }
   handleKeyDown(e) {
     if (e.key === "Delete") {
-      if (!this.currentSelectedSprite) return;
+      //if (!this.currentSelectedSprite) return;
       this.sprites.forEach((sprite) => {
         if (sprite.isSelected) {
           sprite.Destroy();

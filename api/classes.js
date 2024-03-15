@@ -10,7 +10,6 @@ class Editor {
     document.addEventListener("DOMContentLoaded", () => {
       _root = document.getElementById("root");
       _root.addEventListener("mousedown", () => {
-        console.log("mousedown");
         if (!mouseOnElement) {
           this.sprites.forEach((sprite) => {
             sprite.DeSelectSprite();
@@ -18,8 +17,6 @@ class Editor {
         }
       });
       _root.addEventListener("mouseup", () => {
-        console.log("mouseup");
-
         mouseOnElement = false;
 
         if (this.currentSelectedSprite) {
@@ -54,122 +51,169 @@ class Editor {
         }
       });
       this.sprites = this.sprites.filter((sprite) => !sprite.isSelected);
+    } else if (e.key === "Escape") {
+      if (!mouseOnElement) {
+        this.sprites.forEach((sprite) => {
+          sprite.DeSelectSprite();
+        });
+      }
     }
   }
 }
 /////////////////////////////////////////
 class SelectionArea {
-  selectionBoxLeft;
-  selectionBoxTop;
-  selectionBoxRight;
-  selectionBoxBottom;
-
   constructor(sprite, width) {
     this.sprite = sprite;
 
     this.widthOffset = width;
 
     this.width = sprite.width + width;
-    this.height = sprite.width + width;
+    this.height = sprite.height + width;
 
     this.posX = sprite.posX - width / 2;
     this.posY = sprite.posY - width / 2;
 
+    ///////////////////////////////////////////
     const selectionArea = document.createElement("div");
     this.image = selectionArea;
     selectionArea.classList.add("selection-area");
+
+    const selectionBoxLeftDiv = document.createElement("div");
+    const selectionBoxTopDiv = document.createElement("div");
+    const selectionBoxRightDiv = document.createElement("div");
+    const selectionBoxBottomDiv = document.createElement("div");
+
+    selectionBoxLeftDiv.classList.add("selection-box");
+    selectionBoxTopDiv.classList.add("selection-box");
+    selectionBoxRightDiv.classList.add("selection-box");
+    selectionBoxBottomDiv.classList.add("selection-box");
+    ///////////////////////////////////////////
 
     selectionArea.style.left = this.posX + "px";
     selectionArea.style.top = this.posY + "px";
     selectionArea.style.width = this.width + "px";
     selectionArea.style.height = this.height + "px";
 
+    _root.appendChild(selectionBoxLeftDiv);
+    _root.appendChild(selectionBoxTopDiv);
+    _root.appendChild(selectionBoxRightDiv);
+    _root.appendChild(selectionBoxBottomDiv);
+
     _root.appendChild(selectionArea);
+
+    this.selectionBoxLeft = new SelectionBox(
+      selectionBoxLeftDiv,
+      this.posX,
+      this.posY + this.height / 2,
+      this
+    );
+    this.selectionBoxTop = new SelectionBox(
+      selectionBoxTopDiv,
+      this.posX + this.width / 2,
+      this.posY,
+      this
+    );
+    this.selectionBoxRight = new SelectionBox(
+      selectionBoxRightDiv,
+      this.posX + this.width,
+      this.posY + this.height / 2,
+      this
+    );
+    this.selectionBoxBottom = new SelectionBox(
+      selectionBoxBottomDiv,
+      this.posX + this.width / 2,
+      this.posY + this.height,
+      this
+    );
   }
   updatePos(x, y) {
+    const widthOffset = this.widthOffset / 2;
+
     this.posX = x;
     this.posY = y;
 
-    this.image.style.left =
-      this.sprite.GetPos().x - this.widthOffset / 2 + "px";
-    this.image.style.top = this.sprite.GetPos().y - this.widthOffset / 2 + "px";
+    this.image.style.left = x - widthOffset + "px";
+    this.image.style.top = y - widthOffset + "px";
+
+    const halfWidth = this.width / 2;
+    const halfHeight = this.height / 2;
+
+    this.selectionBoxLeft.updatePos(this.posX, this.posY + halfHeight);
+    this.selectionBoxTop.updatePos(this.posX + halfWidth, this.posY);
+    this.selectionBoxRight.updatePos(
+      this.posX + this.width,
+      this.posY + halfHeight
+    );
+    this.selectionBoxBottom.updatePos(
+      this.posX + halfWidth,
+      this.posY + this.height
+    );
+  }
+  GetMidPos() {
+    return {
+      x: this.posX + this.widthOffset / 2,
+      y: this.posY + this.widthOffset / 2,
+    };
   }
   Show() {
+    this.image.style.display = "block";
+    this.selectionBoxLeft.Display();
+    this.selectionBoxTop.Display();
+    this.selectionBoxRight.Display();
+    this.selectionBoxBottom.Display();
+  }
+  Hide() {
+    this.image.style.display = "none";
+    this.selectionBoxLeft.Hide();
+    this.selectionBoxTop.Hide();
+    this.selectionBoxRight.Hide();
+    this.selectionBoxBottom.Hide();
+  }
+  Destroy() {
+    this.image.remove();
+    this.selectionBoxLeft.image.remove();
+    this.selectionBoxTop.image.remove();
+    this.selectionBoxRight.image.remove();
+    this.selectionBoxBottom.image.remove();
+  }
+}
+///////////////////////////////////////////
+class SelectionBox {
+  constructor(image, x, y, selectionArea) {
+    this.selectionArea = selectionArea;
+    this.image = image;
+
+    this.width = 15;
+    const halfWidth = this.width / 2;
+
+    const newXPos = x - halfWidth;
+    const newYPos = y - halfWidth;
+
+    image.style.left = newXPos + "px";
+    image.style.top = newYPos + "px";
+    image.style.display = "none";
+
+    this.posX = newXPos;
+    this.posY = newYPos;
+  }
+  updatePos(x, y) {
+    const halfWidth = this.width / 2;
+
+    const newXPos = x - halfWidth - this.width;
+    const newYPos = y - halfWidth - this.width;
+
+    this.posX = newXPos;
+    this.posY = newYPos;
+
+    this.image.style.left = newXPos + "px";
+    this.image.style.top = newYPos + "px";
+  }
+  Display() {
     this.image.style.display = "block";
   }
   Hide() {
     this.image.style.display = "none";
   }
-}
-///////////////////////////////////////////
-class SelectionBox {
-  constructor(img) {
-    this.imgAttachedTo = img;
-
-    selectionBoxLeft = document.getElementById("selection-box-left");
-    selectionBoxTop = document.getElementById("selection-box-top");
-    selectionBoxRight = document.getElementById("selection-box-right");
-    selectionBoxBottom = document.getElementById("selection-box-bottom");
-
-    selectionBoxLeft.addEventListener("mousedown", onMouseDownSelectionBoxLeft);
-    selectionBoxTop.addEventListener("mousedown", onMouseDownSelectionBoxTop);
-    selectionBoxRight.addEventListener(
-      "mousedown",
-      onMouseDownSelectionBoxRight
-    );
-    selectionBoxBottom.addEventListener(
-      "mousedown",
-      onMouseDownSelectionBoxBottom
-    );
-
-    selectionBoxLeft.addEventListener(
-      "mouseenter",
-      onMouseEnterSelectionBoxLeft
-    );
-    selectionBoxTop.addEventListener("mouseenter", onMouseEnterSelectionBoxTop);
-    selectionBoxRight.addEventListener(
-      "mouseenter",
-      onMouseEnterSelectionBoxRight
-    );
-    selectionBoxBottom.addEventListener(
-      "mouseenter",
-      onMouseEnterSelectionBoxBottom
-    );
-
-    selectionBoxLeft.addEventListener(
-      "mouseleave",
-      onMouseLeaveSelectionBoxLeft
-    );
-    selectionBoxTop.addEventListener("mouseleave", onMouseLeaveSelectionBoxTop);
-    selectionBoxRight.addEventListener(
-      "mouseleave",
-      onMouseLeaveSelectionBoxRight
-    );
-    selectionBoxBottom.addEventListener(
-      "mouseleave",
-      onMouseLeaveSelectionBoxBottom
-    );
-  }
-  updatePos() {
-    this.posX = this.imgAttachedTo.left + "px";
-    this.posX = this.imgAttachedTo.top + "px";
-  }
-  updateGraphics() {
-    this.style.left = this.posX;
-    this.style.top = this.posY;
-  }
-  onMouseDownSelectionBoxLeft() {}
-  onMouseDownSelectionBoxTop() {}
-  onMouseDownSelectionBoxRight() {}
-  onMouseDownSelectionBoxBottom() {}
-  onMouseEnterSelectionBoxLeft() {}
-  onMouseEnterSelectionBoxTop() {}
-  onMouseEnterSelectionBoxRight() {}
-  onMouseEnterSelectionBoxBottom() {}
-  onMouseLeaveSelectionBoxLeft() {}
-  onMouseLeaveSelectionBoxTop() {}
-  onMouseLeaveSelectionBoxRight() {}
-  onMouseLeaveSelectionBoxBottom() {}
 }
 ////////////////////////////////////////////
 class Sprite {
@@ -207,13 +251,16 @@ class Sprite {
     return this.image;
   }
   SetPos(x, y) {
-    this.image.style.left = x - this.offset.x + "px";
-    this.image.style.top = y - this.offset.y + "px";
+    const newPosX = x - this.offset.x;
+    const newPosY = y - this.offset.y;
 
-    this.selectionArea.updatePos(x, y);
+    this.image.style.left = newPosX + "px";
+    this.image.style.top = newPosY + "px";
 
-    this.posX = parseFloat(this.image.style.left);
-    this.posY = parseFloat(this.image.style.top);
+    this.posX = newPosX;
+    this.posY = newPosY;
+
+    this.selectionArea.updatePos(newPosX, newPosY);
   }
   GetPos() {
     return {
@@ -263,7 +310,7 @@ class Sprite {
 
   Destroy() {
     this.image.remove();
-    this.selectionArea.image.remove();
+    this.selectionArea.Destroy();
   }
   //////////// events
 }

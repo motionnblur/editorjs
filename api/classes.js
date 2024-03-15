@@ -168,6 +168,13 @@ class SelectionArea {
     this.selectionBoxRight.Hide();
     this.selectionBoxBottom.Hide();
   }
+  Destroy() {
+    this.image.remove();
+    this.selectionBoxLeft.image.remove();
+    this.selectionBoxTop.image.remove();
+    this.selectionBoxRight.image.remove();
+    this.selectionBoxBottom.image.remove();
+  }
 }
 ///////////////////////////////////////////
 class SelectionBox {
@@ -299,7 +306,7 @@ class Sprite {
 
   Destroy() {
     this.image.remove();
-    this.selectionArea.image.remove();
+    this.selectionArea.Destroy();
   }
   //////////// events
 }

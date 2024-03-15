@@ -124,8 +124,9 @@ class SelectionArea {
     );
   }
   updatePos() {
-    const spritePosX = this.sprite.GetPos().x;
-    const spritePosY = this.sprite.GetPos().y;
+    const spritePos = this.sprite.GetPos();
+    const spritePosX = spritePos.x;
+    const spritePosY = spritePos.y;
     const widthOffset = this.widthOffset / 2;
 
     this.posX = spritePosX;
@@ -134,14 +135,16 @@ class SelectionArea {
     this.image.style.left = spritePosX - widthOffset + "px";
     this.image.style.top = spritePosY - widthOffset + "px";
 
-    this.selectionBoxLeft.updatePos(this.posX, this.posY + this.width / 2);
-    this.selectionBoxTop.updatePos(this.posX + this.width / 2, this.posY);
+    const halfWidth = this.width / 2;
+
+    this.selectionBoxLeft.updatePos(this.posX, this.posY + halfWidth);
+    this.selectionBoxTop.updatePos(this.posX + halfWidth, this.posY);
     this.selectionBoxRight.updatePos(
       this.posX + this.width,
-      this.posY + this.width / 2
+      this.posY + halfWidth
     );
     this.selectionBoxBottom.updatePos(
-      this.posX + this.width / 2,
+      this.posX + halfWidth,
       this.posY + this.width
     );
   }
@@ -153,9 +156,17 @@ class SelectionArea {
   }
   Show() {
     this.image.style.display = "block";
+    this.selectionBoxLeft.Display();
+    this.selectionBoxTop.Display();
+    this.selectionBoxRight.Display();
+    this.selectionBoxBottom.Display();
   }
   Hide() {
     this.image.style.display = "none";
+    this.selectionBoxLeft.Hide();
+    this.selectionBoxTop.Hide();
+    this.selectionBoxRight.Hide();
+    this.selectionBoxBottom.Hide();
   }
 }
 ///////////////////////////////////////////
@@ -172,6 +183,7 @@ class SelectionBox {
 
     image.style.left = newXPos + "px";
     image.style.top = newYPos + "px";
+    image.style.display = "none";
 
     this.posX = newXPos;
     this.posY = newYPos;
@@ -187,6 +199,12 @@ class SelectionBox {
 
     this.image.style.left = newXPos + "px";
     this.image.style.top = newYPos + "px";
+  }
+  Display() {
+    this.image.style.display = "block";
+  }
+  Hide() {
+    this.image.style.display = "none";
   }
 }
 ////////////////////////////////////////////

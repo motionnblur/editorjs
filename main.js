@@ -82,7 +82,7 @@ function dropHandler(ev) {
         var img = document.createElement("img");
         img.src = URL.createObjectURL(file);
 
-        const spriteObj = new Sprite(img, ev, 70, 70);
+        const spriteObj = new Sprite(img, ev, 75, 75);
         _Editor.addSprite(spriteObj);
 
         var src = document.getElementById("root");

@@ -10,7 +10,6 @@ class Editor {
     document.addEventListener("DOMContentLoaded", () => {
       _root = document.getElementById("root");
       _root.addEventListener("mousedown", () => {
-        console.log("mousedown");
         if (!mouseOnElement) {
           this.sprites.forEach((sprite) => {
             sprite.DeSelectSprite();
@@ -18,8 +17,6 @@ class Editor {
         }
       });
       _root.addEventListener("mouseup", () => {
-        console.log("mouseup");
-
         mouseOnElement = false;
 
         if (this.currentSelectedSprite) {
@@ -54,6 +51,12 @@ class Editor {
         }
       });
       this.sprites = this.sprites.filter((sprite) => !sprite.isSelected);
+    } else if (e.key === "Escape") {
+      if (!mouseOnElement) {
+        this.sprites.forEach((sprite) => {
+          sprite.DeSelectSprite();
+        });
+      }
     }
   }
 }
@@ -65,7 +68,7 @@ class SelectionArea {
     this.widthOffset = width;
 
     this.width = sprite.width + width;
-    this.height = sprite.width + width;
+    this.height = sprite.height + width;
 
     this.posX = sprite.posX - width / 2;
     this.posY = sprite.posY - width / 2;
@@ -101,7 +104,7 @@ class SelectionArea {
     this.selectionBoxLeft = new SelectionBox(
       selectionBoxLeftDiv,
       this.posX,
-      this.posY + this.width / 2,
+      this.posY + this.height / 2,
       this
     );
     this.selectionBoxTop = new SelectionBox(
@@ -113,39 +116,37 @@ class SelectionArea {
     this.selectionBoxRight = new SelectionBox(
       selectionBoxRightDiv,
       this.posX + this.width,
-      this.posY + this.width / 2,
+      this.posY + this.height / 2,
       this
     );
     this.selectionBoxBottom = new SelectionBox(
       selectionBoxBottomDiv,
       this.posX + this.width / 2,
-      this.posY + this.width,
+      this.posY + this.height,
       this
     );
   }
-  updatePos() {
-    const spritePos = this.sprite.GetPos();
-    const spritePosX = spritePos.x;
-    const spritePosY = spritePos.y;
+  updatePos(x, y) {
     const widthOffset = this.widthOffset / 2;
 
-    this.posX = spritePosX;
-    this.posY = spritePosY;
+    this.posX = x;
+    this.posY = y;
 
-    this.image.style.left = spritePosX - widthOffset + "px";
-    this.image.style.top = spritePosY - widthOffset + "px";
+    this.image.style.left = x - widthOffset + "px";
+    this.image.style.top = y - widthOffset + "px";
 
     const halfWidth = this.width / 2;
+    const halfHeight = this.height / 2;
 
-    this.selectionBoxLeft.updatePos(this.posX, this.posY + halfWidth);
+    this.selectionBoxLeft.updatePos(this.posX, this.posY + halfHeight);
     this.selectionBoxTop.updatePos(this.posX + halfWidth, this.posY);
     this.selectionBoxRight.updatePos(
       this.posX + this.width,
-      this.posY + halfWidth
+      this.posY + halfHeight
     );
     this.selectionBoxBottom.updatePos(
       this.posX + halfWidth,
-      this.posY + this.width
+      this.posY + this.height
     );
   }
   GetMidPos() {
@@ -250,13 +251,16 @@ class Sprite {
     return this.image;
   }
   SetPos(x, y) {
-    this.image.style.left = x - this.offset.x + "px";
-    this.image.style.top = y - this.offset.y + "px";
+    const newPosX = x - this.offset.x;
+    const newPosY = y - this.offset.y;
 
-    this.selectionArea.updatePos(x, y);
+    this.image.style.left = newPosX + "px";
+    this.image.style.top = newPosY + "px";
 
-    this.posX = x - this.offset.x;
-    this.posY = y - this.offset.y;
+    this.posX = newPosX;
+    this.posY = newPosY;
+
+    this.selectionArea.updatePos(newPosX, newPosY);
   }
   GetPos() {
     return {

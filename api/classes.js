@@ -20,9 +20,7 @@ class Editor {
       _root = document.getElementById("root");
       _root.addEventListener("mousedown", (e) => {
         if (!mouseOnElement) {
-          this.sprites.forEach((sprite) => {
-            sprite.DeSelectSprite();
-          });
+          this.DeSelectSprites();
           this.selectAreaDiv.style.display = "block";
           rootMouseDown = true;
           firstAreaPos = {
@@ -118,6 +116,11 @@ class Editor {
       } else {
         sprite.DeSelectSprite();
       }
+    });
+  }
+  DeSelectSprites() {
+    this.sprites.forEach((sprite) => {
+      sprite.DeSelectSprite();
     });
   }
   ClearSelectArea() {
@@ -365,6 +368,10 @@ class Sprite {
 
   //////////// events
   onMouseDownSprite(e) {
+    if (_editor.currentSelectedSprite) {
+      _editor.DeSelectSprites();
+    }
+
     mouseOnElement = true;
     this.movable = true;
     this.SelectSprite();

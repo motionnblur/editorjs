@@ -19,13 +19,7 @@ class Sprite extends Draggable {
     this.image.style.width = this.width + "px";
     this.image.style.height = this.height + "px";
 
-    this.image.addEventListener("mousedown", this.onMouseDownSprite.bind(this));
-
     this.selectionArea = new SelectionArea(this, 30);
-
-    this.clickCount = 0;
-    this.isSelected = false;
-    this.movable = false;
   }
   SetImage(image) {
     this.image = image;
@@ -33,18 +27,7 @@ class Sprite extends Draggable {
   GetImage() {
     return this.image;
   }
-  SetPos(x, y) {
-    const newPosX = x - this.offset.x;
-    const newPosY = y - this.offset.y;
 
-    this.image.style.left = newPosX + "px";
-    this.image.style.top = newPosY + "px";
-
-    this.posX = newPosX;
-    this.posY = newPosY;
-
-    this.selectionArea.updatePos(newPosX, newPosY);
-  }
   SetWidth(width) {
     this.image.style.width = width;
     this.widthAsFloat = width;
@@ -59,9 +42,7 @@ class Sprite extends Draggable {
   GetHeight() {
     return this.heightAsFloat;
   }
-  StopDrag() {
-    this.movable = false;
-  }
+
   SelectSprite() {
     this.selectionArea.Show();
     _editor.currentSelectedSprite = this;
@@ -92,6 +73,10 @@ class Sprite extends Draggable {
   Destroy() {
     this.image.remove();
     this.selectionArea.Destroy();
+  }
+  ReDraw() {
+    this.image.style.left = this.mousePos.x - this.width / 2 + "px";
+    this.image.style.top = this.mousePos.y - this.width / 2 + "px";
   }
   //////////// events
 }

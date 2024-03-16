@@ -30,6 +30,7 @@ class SelectionArea {
     selectionArea.style.top = this.posY + "px";
     selectionArea.style.width = this.width + "px";
     selectionArea.style.height = this.height + "px";
+    selectionArea.style.display = "none";
 
     _root.appendChild(selectionBoxLeftDiv);
     _root.appendChild(selectionBoxTopDiv);
@@ -66,6 +67,12 @@ class SelectionArea {
       this,
       "bottom"
     );
+  }
+  Show() {
+    selectionArea.style.display = "block";
+  }
+  Hide() {
+    selectionArea.style.display = "none";
   }
   updatePos(x, y) {
     const widthOffset = this.widthOffset / 2;

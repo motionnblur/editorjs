@@ -43,6 +43,14 @@ class Sprite extends Draggable {
     return this.heightAsFloat;
   }
 
+  DrawSelectionArea(x, y) {
+    this.selectionArea.updatePos(x, y);
+  }
+  MouseDown(x, y) {
+    this.selectionArea.updatePos(x, y);
+    this.selectionArea.Show();
+  }
+
   //////////// events
 
   Destroy() {

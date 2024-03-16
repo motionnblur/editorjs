@@ -23,6 +23,14 @@ class Draggable extends EventObject {
       x: e.clientX - this.image.offsetLeft,
       y: e.clientY - this.image.offsetTop,
     };
+
+    const newPosX = e.clientX - this.offset.x;
+    const newPosY = e.clientY - this.offset.y;
+
+    this.image.style.left = newPosX + "px";
+    this.image.style.top = newPosY + "px";
+
+    this.MouseDown(newPosX, newPosY);
   }
   onMouseMove(e) {
     /* this.mousePos = {
@@ -39,5 +47,7 @@ class Draggable extends EventObject {
 
     this.image.style.left = newPosX + "px";
     this.image.style.top = newPosY + "px";
+
+    this.DrawSelectionArea(newPosX, newPosY);
   }
 }

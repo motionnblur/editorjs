@@ -1,6 +1,6 @@
 class Sprite extends Draggable {
   constructor(image, ev, width, height) {
-    super(ev);
+    super(ev, image);
 
     this.width = width;
     this.firstWidth = width;

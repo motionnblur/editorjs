@@ -1,5 +1,6 @@
-class Draggable {
-  constructor(pos) {
+class Draggable extends EventObject {
+  constructor(pos, image) {
+    super(image);
     this.pos = {
       x: pos.clientX,
       y: pos.clientY,

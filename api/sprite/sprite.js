@@ -43,32 +43,7 @@ class Sprite extends Draggable {
     return this.heightAsFloat;
   }
 
-  SelectSprite() {
-    this.selectionArea.Show();
-    _editor.currentSelectedSprite = this;
-    this.isSelected = true;
-  }
-  DeSelectSprite() {
-    this.selectionArea.Hide();
-    _editor.currentSelectedSprite = null;
-    this.isSelected = false;
-  }
-
   //////////// events
-  onMouseDownSprite(e) {
-    if (_editor.currentSelectedSprite) {
-      _editor.DeSelectSprites();
-    }
-
-    mouseOnElement = true;
-    this.movable = true;
-    this.SelectSprite();
-
-    this.offset = {
-      x: e.clientX - this.image.offsetLeft,
-      y: e.clientY - this.image.offsetTop,
-    };
-  }
 
   Destroy() {
     this.image.remove();
@@ -79,6 +54,13 @@ class Sprite extends Draggable {
 
     const newPosX = this.mousePos.x - this.offset.x;
     const newPosY = this.mousePos.y - this.offset.y;
+
+    this.image.style.left = newPosX + "px";
+    this.image.style.top = newPosY + "px";
+  }
+  Move(e) {
+    const newPosX = e.clientX - this.offset.x;
+    const newPosY = e.clientY - this.offset.y;
 
     this.image.style.left = newPosX + "px";
     this.image.style.top = newPosY + "px";

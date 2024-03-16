@@ -1,8 +1,8 @@
 class EventObject {
-  constructor(image) {
-    image.addEventListener("mousedown", this.onMouseDown.bind(this));
-    image.addEventListener("mouseup", this.onMouseUp.bind(this));
-    image.addEventListener("mousemove", this.onMouseMove.bind(this));
+  constructor(elem) {
+    elem.addEventListener("mousedown", this.onMouseDown.bind(this));
+    elem.addEventListener("mouseup", this.onMouseUp.bind(this));
+    elem.addEventListener("mousemove", this.onMouseMove.bind(this));
   }
   onMouseDown(e) {
     console.log("mousedown");
@@ -13,7 +13,7 @@ class EventObject {
     this.onMouseMove(e);
   }
   onMouseUp(e) {
-    this.mouseDown = false;
+    console.log("mouseup");
     this.onMouseUp(e);
   }
 }

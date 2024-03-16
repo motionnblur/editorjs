@@ -18,15 +18,41 @@ class Editor extends EventObject {
   onMouseDown(e) {
     console.log("down editor");
 
-    //console.log(e);
-    if (e.target.tagName === "IMG") {
-      this.currentSprite = this.spriteMap.get(e.target);
+    if (e.target.tagName !== "IMG") {
+      if (this.currentSprite) {
+        this.currentSprite.HideSelectionArea();
+        this.currentSprite = null;
+      }
+    } else if (e.target.tagName === "IMG") {
+      const newSelectedSprite = this.spriteMap.get(e.target);
+      if (this.currentSprite === null) {
+        this.currentSprite = newSelectedSprite;
+        this.currentSprite.ShowSelectionArea();
+        console.log("return");
+        return;
+      }
+
+      if (this.currentSprite) {
+        if (this.currentSprite !== newSelectedSprite) {
+          this.currentSprite.HideSelectionArea();
+        }
+        if (!this.currentSprite.isSelectionAreaOpen) {
+          if (this.currentSprite.isSelected) {
+          } else {
+            this.currentSprite.HideSelectionArea();
+            this.currentSprite = null;
+          }
+        }
+      }
+      this.currentSprite = newSelectedSprite;
     }
   }
   onMouseUp(e) {
     console.log("up editor");
 
-    this.currentSprite = null;
+    if (this.currentSprite) {
+      this.currentSprite.StopDrag();
+    }
   }
   onMouseMove(e) {
     console.log("move editor");

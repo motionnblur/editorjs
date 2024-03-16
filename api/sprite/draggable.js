@@ -9,10 +9,18 @@ class Draggable extends EventObject {
     this.movable = false;
     this.clickCount = 0;
   }
-  StopDrag() {
-    /* this.movable = false; */
+  StartDrag() {
+    this.movable = true;
   }
+  StopDrag() {
+    this.movable = false;
+  }
+
   onMouseDown(e) {
+    this.isSelected = true;
+
+    this.StartDrag();
+
     this.mouseDown = true;
 
     this.firstMousePos = {
@@ -42,6 +50,8 @@ class Draggable extends EventObject {
     this.mouseDown = false;
   }
   Move(e) {
+    if (!this.movable) return;
+
     const newPosX = e.clientX - this.offset.x;
     const newPosY = e.clientY - this.offset.y;
 

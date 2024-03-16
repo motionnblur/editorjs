@@ -48,9 +48,17 @@ class Sprite extends Draggable {
   }
   MouseDown(x, y) {
     this.selectionArea.updatePos(x, y);
-    this.selectionArea.Show();
+    this.ShowSelectionArea();
   }
 
+  ShowSelectionArea() {
+    this.isSelectionAreaOpen = true;
+    this.selectionArea.Show();
+  }
+  HideSelectionArea() {
+    this.isSelectionAreaOpen = false;
+    this.selectionArea.Hide();
+  }
   //////////// events
 
   Destroy() {

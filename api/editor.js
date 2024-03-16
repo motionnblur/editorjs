@@ -14,7 +14,22 @@ class Editor extends EventObject {
     _editor = this;
     this.spriteMap = new Map();
   }
+  onKeyEscapeDown() {
+    console.log("escape editor");
 
+    if (this.currentSprite) {
+      this.currentSprite.HideSelectionArea();
+      this.currentSprite = null;
+    }
+  }
+  onKeyDeleteDown() {
+    console.log("delete editor");
+
+    if (this.currentSprite) {
+      this.currentSprite.Destroy();
+      this.currentSprite = null;
+    }
+  }
   onMouseDown(e) {
     console.log("down editor");
 

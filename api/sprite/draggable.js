@@ -10,7 +10,7 @@ class Draggable extends EventObject {
     this.clickCount = 0;
   }
   StopDrag() {
-    this.movable = false;
+    /* this.movable = false; */
   }
   onMouseDown(e) {
     this.mouseDown = true;
@@ -25,13 +25,19 @@ class Draggable extends EventObject {
     };
   }
   onMouseMove(e) {
-    this.mousePos = {
+    /* this.mousePos = {
       x: e.clientX,
       y: e.clientY,
-    };
-    this.ReDraw();
+    }; */
   }
   onMouseUp(e) {
     this.mouseDown = false;
+  }
+  Move(e) {
+    const newPosX = e.clientX - this.offset.x;
+    const newPosY = e.clientY - this.offset.y;
+
+    this.image.style.left = newPosX + "px";
+    this.image.style.top = newPosY + "px";
   }
 }

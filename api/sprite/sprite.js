@@ -49,21 +49,6 @@ class Sprite extends Draggable {
     this.image.remove();
     this.selectionArea.Destroy();
   }
-  ReDraw() {
-    if (!this.mouseDown) return;
 
-    const newPosX = this.mousePos.x - this.offset.x;
-    const newPosY = this.mousePos.y - this.offset.y;
-
-    this.image.style.left = newPosX + "px";
-    this.image.style.top = newPosY + "px";
-  }
-  Move(e) {
-    const newPosX = e.clientX - this.offset.x;
-    const newPosY = e.clientY - this.offset.y;
-
-    this.image.style.left = newPosX + "px";
-    this.image.style.top = newPosY + "px";
-  }
   //////////// events
 }

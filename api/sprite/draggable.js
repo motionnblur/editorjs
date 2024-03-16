@@ -9,25 +9,29 @@ class Draggable extends EventObject {
     this.movable = false;
     this.clickCount = 0;
   }
-  GetPos() {
-    return this.pos;
-  }
-  SetPos(x, y) {
-    const newPosX = x - this.offset.x;
-    const newPosY = y - this.offset.y;
-
-    this.image.style.left = newPosX + "px";
-    this.image.style.top = newPosY + "px";
-
-    this.pos = {
-      x: newPosX,
-      y: newPosY,
-    };
-  }
   StopDrag() {
     this.movable = false;
   }
-  ReDraw() {
+  onMouseDown(e) {
+    this.mouseDown = true;
+
+    this.firstMousePos = {
+      x: e.clientX,
+      y: e.clientY,
+    };
+    this.offset = {
+      x: e.clientX - this.image.offsetLeft,
+      y: e.clientY - this.image.offsetTop,
+    };
+  }
+  onMouseMove(e) {
+    this.mousePos = {
+      x: e.clientX,
+      y: e.clientY,
+    };
     this.ReDraw();
+  }
+  onMouseUp(e) {
+    this.mouseDown = false;
   }
 }

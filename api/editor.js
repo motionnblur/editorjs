@@ -35,8 +35,8 @@ class Editor {
             x: e.clientX,
             y: e.clientY,
           };
-          this.DrawSelectArea(firstAreaPos, lastAreaPos);
-          this.DoSelect(firstAreaPos, lastAreaPos);
+          //this.DrawSelectArea(firstAreaPos, lastAreaPos);
+          //this.DoSelect(firstAreaPos, lastAreaPos);
         }
         if (this.currentSelectedItem && this.currentSelectedItem.movable) {
           this.currentSelectedItem.SetPos(e.clientX, e.clientY);

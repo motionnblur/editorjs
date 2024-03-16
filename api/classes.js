@@ -10,6 +10,7 @@ var lastAreaPos = {
   y: 0,
 };
 var rootMouseDown = false;
+var resizeStage = false;
 
 class Editor {
   sprites = new Array();
@@ -38,6 +39,9 @@ class Editor {
         if (this.currentSelectedSprite) {
           this.currentSelectedSprite.StopDrag();
         }
+        if (resizeStage) {
+          resizeStage = false;
+        }
       });
       _root.addEventListener("mousemove", (e) => {
         if (rootMouseDown) {
@@ -50,6 +54,9 @@ class Editor {
         }
         if (this.currentSelectedSprite && this.currentSelectedSprite.movable) {
           this.currentSelectedSprite.SetPos(e.clientX, e.clientY);
+        }
+        if (resizeStage) {
+          this.currentSelectedBox.ResizeSprite(e);
         }
       });
       window.addEventListener("keydown", this.handleKeyDown.bind(this));
@@ -229,6 +236,18 @@ class SelectionArea {
       y: this.posY + this.widthOffset / 2,
     };
   }
+  GetSpriteWidth() {
+    return this.sprite.width;
+  }
+  GetSpriteHeight() {
+    return this.sprite.height;
+  }
+  GetSpriteImg() {
+    return this.sprite.image;
+  }
+  SetSpriteWidth(width) {
+    this.sprite.width = width;
+  }
   Show() {
     this.image.style.display = "block";
     this.selectionBoxLeft.Display();
@@ -249,6 +268,10 @@ class SelectionArea {
     this.selectionBoxTop.image.remove();
     this.selectionBoxRight.image.remove();
     this.selectionBoxBottom.image.remove();
+  }
+  ReDraw() {
+    selectionArea.style.width = this.width + "px";
+    selectionArea.style.height = this.height + "px";
   }
 }
 ///////////////////////////////////////////
@@ -272,8 +295,21 @@ class SelectionBox {
     this.posX = newXPos;
     this.posY = newYPos;
 
-    this.image.addEventListener("mousedown", () => {
+    this.image.addEventListener("mousedown", (e) => {
       mouseOnElement = true;
+      resizeStage = true;
+      _editor.currentSelectedBox = this;
+
+      this.offset = {
+        x: e.clientX - this.image.offsetLeft,
+        y: e.clientY - this.image.offsetTop,
+      };
+
+      this.offsetPivot = {
+        x: x - parseFloat(this.image.style.left),
+        y: y - parseFloat(this.image.style.top),
+      };
+      console.log(this.offsetPivot);
     });
   }
   updatePos(x, y) {
@@ -294,6 +330,75 @@ class SelectionBox {
   Hide() {
     this.image.style.display = "none";
   }
+  ResizeSprite(e) {
+    if (this.name === "left") {
+      const newPosX = e.clientX - this.offset.x;
+      this.image.style.left = newPosX + "px";
+
+      const spriteWidth = this.selectionArea.GetSpriteWidth();
+      const spriteImg = this.selectionArea.GetSpriteImg();
+      const newWidth = spriteWidth + (this.posX - e.clientX) + this.offset.x;
+
+      spriteImg.style.width = newWidth + "px";
+
+      const slideAmountX = newPosX + 22.5 - parseFloat(spriteImg.style.left);
+
+      spriteImg.style.left =
+        parseFloat(spriteImg.style.left) + slideAmountX + "px";
+
+      this.selectionArea.image.style.width =
+        newWidth + this.selectionArea.widthOffset + "px";
+      this.selectionArea.image.style.left =
+        parseFloat(this.selectionArea.image.style.left) + slideAmountX + "px";
+    } else if (this.name === "top") {
+      const newPosY = e.clientY - this.offset.y;
+      this.image.style.top = newPosY + "px";
+
+      const spriteHeight = this.selectionArea.GetSpriteHeight();
+      const spriteImg = this.selectionArea.GetSpriteImg();
+      const newHeight = spriteHeight + (this.posY - e.clientY) + this.offset.y;
+
+      spriteImg.style.height = newHeight + "px";
+
+      const slideAmountY = newPosY + 22.5 - parseFloat(spriteImg.style.top);
+
+      spriteImg.style.top =
+        parseFloat(spriteImg.style.top) + slideAmountY + "px";
+
+      this.selectionArea.image.style.height =
+        newHeight + this.selectionArea.widthOffset + "px";
+      this.selectionArea.image.style.top =
+        parseFloat(this.selectionArea.image.style.top) + slideAmountY + "px";
+    } else if (this.name === "right") {
+      const newPosX = e.clientX - this.offset.x;
+      this.image.style.left = newPosX + "px";
+
+      const spriteWidth = this.selectionArea.GetSpriteWidth();
+      const spriteImg = this.selectionArea.GetSpriteImg();
+      const newWidth = spriteWidth + (e.clientX - this.posX) - this.offset.x;
+
+      spriteImg.style.width = newWidth + "px";
+
+      this.selectionArea.image.style.width =
+        newWidth + this.selectionArea.widthOffset + "px";
+      this.selectionArea.image.style.left =
+        parseFloat(this.selectionArea.image.style.left) + "px";
+    } else if (this.name === "bottom") {
+      const newPosY = e.clientY - this.offset.y;
+      this.image.style.top = newPosY + "px";
+
+      const spriteHeight = this.selectionArea.GetSpriteHeight();
+      const spriteImg = this.selectionArea.GetSpriteImg();
+      const newHeight = spriteHeight + (e.clientY - this.posY) - this.offset.y;
+
+      spriteImg.style.height = newHeight + "px";
+
+      this.selectionArea.image.style.height =
+        newHeight + this.selectionArea.widthOffset + "px";
+      this.selectionArea.image.style.top =
+        parseFloat(this.selectionArea.image.style.top) + "px";
+    }
+  }
 }
 ////////////////////////////////////////////
 class Sprite {
@@ -302,6 +407,8 @@ class Sprite {
     this.posY = ev.clientY;
 
     this.width = width;
+    this.firstWidth = width;
+
     this.height = height;
 
     this.image = image;

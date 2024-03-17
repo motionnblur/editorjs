@@ -1,5 +1,11 @@
-class SelectionBox {
+class SelectionBox extends DynamicTexture {
   constructor(image, x, y, selectionArea, name) {
+    const pos = {
+      x: x,
+      y: y,
+    };
+    super(pos, image);
+
     this.name = name;
 
     this.selectionArea = selectionArea;
@@ -8,51 +14,16 @@ class SelectionBox {
     this.width = 15;
     const halfWidth = this.width / 2;
 
-    const newXPos = x - halfWidth;
-    const newYPos = y - halfWidth;
-
-    image.style.left = newXPos + "px";
-    image.style.top = newYPos + "px";
-    image.style.display = "none";
-
-    this.posX = newXPos;
-    this.posY = newYPos;
-
-    this.image.addEventListener("mousedown", (e) => {
-      mouseOnElement = true;
-      resizeStage = true;
-      _editor.currentSelectedBox = this;
-
-      this.offset = {
-        x: e.clientX - this.image.offsetLeft,
-        y: e.clientY - this.image.offsetTop,
-      };
-
-      this.offsetPivot = {
-        x: x - parseFloat(this.image.style.left),
-        y: y - parseFloat(this.image.style.top),
-      };
-      console.log(this.offsetPivot);
-    });
+    this.posX = x - halfWidth;
+    this.posY = y - halfWidth;
   }
   updatePos(x, y) {
-    const halfWidth = this.width / 2;
+    this.posX = x;
+    this.posY = y;
 
-    const newXPos = x - halfWidth - this.width;
-    const newYPos = y - halfWidth - this.width;
+    this.Draw(x, y);
+  }
 
-    this.posX = newXPos;
-    this.posY = newYPos;
-
-    this.image.style.left = newXPos + "px";
-    this.image.style.top = newYPos + "px";
-  }
-  Display() {
-    this.image.style.display = "block";
-  }
-  Hide() {
-    this.image.style.display = "none";
-  }
   ResizeSprite(e) {
     if (this.name === "left") {
       const newPosX = e.clientX - this.offset.x;

@@ -66,13 +66,13 @@ class Editor extends EventObject {
     console.log("up editor");
 
     if (this.currentSprite) {
-      this.currentSprite.StopDrag();
+      this.currentSprite.SetMovable(false);
     }
   }
   onMouseMove(e) {
     console.log("move editor");
     if (this.currentSprite) {
-      this.currentSprite.Move(e);
+      this.currentSprite.UpdatePos(e);
     }
   }
 
@@ -84,7 +84,7 @@ class Editor extends EventObject {
     _editor.addItem(_item);
 
     var src = document.getElementById("root");
-    src.appendChild(_item.GetImage());
+    src.appendChild(_item.image);
 
     this.spriteMap.set(img, _item);
   }

@@ -1,51 +1,17 @@
-class Sprite extends Draggable {
+class SpriteItem extends DynamicTexture {
   constructor(image, ev, width, height) {
     super(ev, image);
 
     this.width = width;
-    this.firstWidth = width;
-
     this.height = height;
 
-    this.image = image;
-    this.image.draggable = false;
-
-    this.image.classList.add("img");
-
-    this.image.style.position = "absolute";
-    this.image.style.left = ev.clientX + "px";
-    this.image.style.top = ev.clientY + "px";
-
-    this.image.style.width = this.width + "px";
-    this.image.style.height = this.height + "px";
-
-    this.selectionArea = new SelectionArea(this, 30);
-  }
-  SetImage(image) {
-    this.image = image;
-  }
-  GetImage() {
-    return this.image;
+    const pos = {
+      x: ev.clientX,
+      y: ev.clientY,
+    };
+    this.selectionArea = new SelectionArea(this, pos, 30);
   }
 
-  SetWidth(width) {
-    this.image.style.width = width;
-    this.widthAsFloat = width;
-  }
-  GetWidth() {
-    return this.widthAsFloat;
-  }
-  SetHeight(height) {
-    this.image.style.height = height;
-    this.heightAsFloat = height;
-  }
-  GetHeight() {
-    return this.heightAsFloat;
-  }
-
-  DrawSelectionArea(x, y) {
-    this.selectionArea.updatePos(x, y);
-  }
   MouseDown(x, y) {
     this.selectionArea.updatePos(x, y);
     this.ShowSelectionArea();
@@ -59,12 +25,14 @@ class Sprite extends Draggable {
     this.isSelectionAreaOpen = false;
     this.selectionArea.Hide();
   }
-  //////////// events
+  onDraw() {
+    this.selectionArea.updatePos(this.pos.x, this.pos.y);
+  }
 
+  //////////// events
   Destroy() {
     this.image.remove();
     this.selectionArea.Destroy();
   }
-
   //////////// events
 }

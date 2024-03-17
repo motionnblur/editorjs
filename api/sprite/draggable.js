@@ -9,17 +9,13 @@ class Draggable extends EventObject {
     this.movable = false;
     this.clickCount = 0;
   }
-  StartDrag() {
-    this.movable = true;
+  SetMovable(_bool) {
+    this.movable = _bool;
   }
-  StopDrag() {
-    this.movable = false;
-  }
-
   onMouseDown(e) {
     this.isSelected = true;
 
-    this.StartDrag();
+    this.SetMovable(true);
 
     this.mouseDown = true;
 
@@ -49,15 +45,17 @@ class Draggable extends EventObject {
   onMouseUp(e) {
     this.mouseDown = false;
   }
-  Move(e) {
+  UpdatePos(e) {
     if (!this.movable) return;
 
     const newPosX = e.clientX - this.offset.x;
     const newPosY = e.clientY - this.offset.y;
 
-    this.image.style.left = newPosX + "px";
-    this.image.style.top = newPosY + "px";
+    this.pos = {
+      x: newPosX,
+      y: newPosY,
+    };
 
-    this.DrawSelectionArea(newPosX, newPosY);
+    this.Draw(newPosX, newPosY);
   }
 }

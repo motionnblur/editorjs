@@ -1,9 +1,8 @@
-class SelectionArea {
-  constructor(sprite, width) {
-    this.sprite = sprite;
+class SelectionArea extends StaticTexture {
+  constructor(sprite, pos, width) {
+    super(pos, sprite.image);
 
     this.widthOffset = width;
-
     this.width = sprite.width + width;
     this.height = sprite.height + width;
 
@@ -68,12 +67,6 @@ class SelectionArea {
       "bottom"
     );
   }
-  Show() {
-    selectionArea.style.display = "block";
-  }
-  Hide() {
-    selectionArea.style.display = "none";
-  }
   updatePos(x, y) {
     const widthOffset = this.widthOffset / 2;
 
@@ -83,37 +76,14 @@ class SelectionArea {
     this.image.style.left = x - widthOffset + "px";
     this.image.style.top = y - widthOffset + "px";
 
-    const halfWidth = this.width / 2;
-    const halfHeight = this.height / 2;
+    this.UpdateSelectionBoxPositions(x, y);
+  }
 
-    this.selectionBoxLeft.updatePos(this.posX, this.posY + halfHeight);
-    this.selectionBoxTop.updatePos(this.posX + halfWidth, this.posY);
-    this.selectionBoxRight.updatePos(
-      this.posX + this.width,
-      this.posY + halfHeight
-    );
-    this.selectionBoxBottom.updatePos(
-      this.posX + halfWidth,
-      this.posY + this.height
-    );
-  }
-  GetMidPos() {
-    return {
-      x: this.posX + this.widthOffset / 2,
-      y: this.posY + this.widthOffset / 2,
-    };
-  }
-  GetSpriteWidth() {
-    return this.sprite.width;
-  }
-  GetSpriteHeight() {
-    return this.sprite.height;
-  }
-  GetSpriteImg() {
-    return this.sprite.image;
-  }
-  SetSpriteWidth(width) {
-    this.sprite.width = width;
+  UpdateSelectionBoxPositions(x, y) {
+    this.selectionBoxLeft.updatePos(x, y);
+    this.selectionBoxTop.updatePos(x, y);
+    this.selectionBoxRight.updatePos(x, y);
+    this.selectionBoxBottom.updatePos(x, y);
   }
   Show() {
     this.image.style.display = "block";
@@ -135,9 +105,5 @@ class SelectionArea {
     this.selectionBoxTop.image.remove();
     this.selectionBoxRight.image.remove();
     this.selectionBoxBottom.image.remove();
-  }
-  ReDraw() {
-    selectionArea.style.width = this.width + "px";
-    selectionArea.style.height = this.height + "px";
   }
 }

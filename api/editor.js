@@ -13,6 +13,12 @@ class Editor extends EventObject {
 
     _editor = this;
     this.spriteMap = new Map();
+
+    reactor.registerEvent("onSelectionBox");
+    reactor.addEventListener("onSelectionBox", this.onSelectionBox);
+  }
+  onSelectionBox(e) {
+    alert(e.box_name);
   }
   onKeyEscapeDownCallback() {
     if (this.currentSprite) {
@@ -28,6 +34,9 @@ class Editor extends EventObject {
   }
   onMouseDownCallback(e) {
     if (e.target.tagName !== "IMG") {
+      if (e.target.className === "selection-box img") {
+        return;
+      }
       if (this.currentSprite) {
         this.currentSprite.HideSelectionArea();
         this.currentSprite = null;

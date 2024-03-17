@@ -9,6 +9,8 @@ class SelectionBox extends DynamicTexture {
     );
 
     this.name = name;
+    image.style.display = "none";
+
     super.SetWidth(width);
     super.SetHeight(height);
   }
@@ -19,8 +21,9 @@ class SelectionBox extends DynamicTexture {
     this.Draw(x, y);
   }
 
-  MouseDown(x, y) {
-    alert("a");
+  MouseDown(x, y) {}
+  onMouseDown(e) {
+    reactor.dispatchEvent("onSelectionBox", { box_name: this.name });
   }
 
   /* ResizeSprite(e) {

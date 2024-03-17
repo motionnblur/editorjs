@@ -5,11 +5,14 @@ class SpriteItem extends DynamicTexture {
     this.width = width;
     this.height = height;
 
-    const pos = {
-      x: ev.clientX,
-      y: ev.clientY,
-    };
-    this.selectionArea = new SelectionArea(this, pos, 25);
+    this.selectionArea = new SelectionArea(
+      this,
+      {
+        x: ev.clientX,
+        y: ev.clientY,
+      },
+      25
+    );
   }
 
   MouseDown(x, y) {
@@ -25,7 +28,7 @@ class SpriteItem extends DynamicTexture {
     this.isSelectionAreaOpen = false;
     this.selectionArea.Hide();
   }
-  onDraw() {
+  OnDrawCallback() {
     this.selectionArea.updatePos(this.pos.x, this.pos.y);
   }
 

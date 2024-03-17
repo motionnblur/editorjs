@@ -3,15 +3,14 @@ class DynamicTexture extends Draggable {
     super(pos, image);
 
     this.image = image;
-    image.style.display = "block";
 
+    this.image.draggable = false;
     this.image.style.position = "absolute";
     this.image.style.left = pos.x + "px";
     this.image.style.top = pos.y + "px";
-    this.image.draggable = false;
-    this.image.classList.add("img");
     this.image.style.width = width + "px";
     this.image.style.height = height + "px";
+    this.image.classList.add("img");
   }
   Display() {
     this.image.style.display = "block";
@@ -22,7 +21,13 @@ class DynamicTexture extends Draggable {
   Draw(x, y) {
     this.image.style.left = x + "px";
     this.image.style.top = y + "px";
-    this.onDraw();
+    this.OnDrawCallback();
   }
-  onDraw() {}
+  SetWidth(_width) {
+    this.image.style.width = _width + "px";
+  }
+  SetHeight(_height) {
+    this.image.style.height = _height + "px";
+  }
+  OnDrawCallback() {}
 }

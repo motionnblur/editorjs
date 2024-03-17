@@ -1,21 +1,16 @@
 class SelectionBox extends DynamicTexture {
-  constructor(image, x, y, selectionArea, name) {
-    const pos = {
-      x: x,
-      y: y,
-    };
-    super(pos, image);
+  constructor(image, x, y, name, width, height) {
+    super(
+      {
+        x: x,
+        y: y,
+      },
+      image
+    );
 
     this.name = name;
-
-    this.selectionArea = selectionArea;
-    this.image = image;
-
-    this.width = 15;
-    const halfWidth = this.width / 2;
-
-    this.posX = x - halfWidth;
-    this.posY = y - halfWidth;
+    super.SetWidth(width);
+    super.SetHeight(height);
   }
   updatePos(x, y) {
     this.posX = x;
@@ -24,7 +19,11 @@ class SelectionBox extends DynamicTexture {
     this.Draw(x, y);
   }
 
-  ResizeSprite(e) {
+  MouseDown(x, y) {
+    alert("a");
+  }
+
+  /* ResizeSprite(e) {
     if (this.name === "left") {
       const newPosX = e.clientX - this.offset.x;
       this.image.style.left = newPosX + "px";
@@ -92,5 +91,5 @@ class SelectionBox extends DynamicTexture {
       this.selectionArea.image.style.top =
         parseFloat(this.selectionArea.image.style.top) + "px";
     }
-  }
+  } */
 }

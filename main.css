@@ -33,18 +33,16 @@ body {
 }
 .selection-box {
   position: absolute;
-  background-color: greenyellow;
+  background-color: rgba(37, 60, 165, 0.493);
   z-index: 999;
   user-select: none;
-  width: 15px;
-  height: 15px;
   left: 0;
   top: 0;
   cursor: pointer;
   /*display: none; */
 }
 .selection-box:hover {
-  background-color: green;
+  background-color: rgba(37, 60, 165, 1);
 }
 
 #group-select {

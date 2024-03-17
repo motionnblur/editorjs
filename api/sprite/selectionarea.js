@@ -10,11 +10,18 @@ class SelectionArea extends StaticTexture {
     this.posX = sprite.posX - width / 2;
     this.posY = sprite.posY - width / 2;
 
-    ///////////////////////////////////////////
     const selectionArea = document.createElement("div");
     this.image = selectionArea;
-    selectionArea.classList.add("selection-area");
 
+    selectionArea.classList.add("selection-area");
+    selectionArea.style.left = this.posX + "px";
+    selectionArea.style.top = this.posY + "px";
+    selectionArea.style.width = this.width + "px";
+    selectionArea.style.height = this.height + "px";
+    selectionArea.style.display = "none";
+
+    _root.appendChild(selectionArea);
+    ////////////////////////////////////////////////////////////////////////////
     const selectionBoxLeftDiv = document.createElement("div");
     const selectionBoxTopDiv = document.createElement("div");
     const selectionBoxRightDiv = document.createElement("div");
@@ -24,49 +31,52 @@ class SelectionArea extends StaticTexture {
     selectionBoxTopDiv.classList.add("selection-box");
     selectionBoxRightDiv.classList.add("selection-box");
     selectionBoxBottomDiv.classList.add("selection-box");
-    ///////////////////////////////////////////
-
-    selectionArea.style.left = this.posX + "px";
-    selectionArea.style.top = this.posY + "px";
-    selectionArea.style.width = this.width + "px";
-    selectionArea.style.height = this.height + "px";
-    selectionArea.style.display = "none";
 
     _root.appendChild(selectionBoxLeftDiv);
     _root.appendChild(selectionBoxTopDiv);
     _root.appendChild(selectionBoxRightDiv);
     _root.appendChild(selectionBoxBottomDiv);
 
-    _root.appendChild(selectionArea);
+    const selectionBoxWidth = 10;
+    const selectionBoxHeight = 10;
 
     this.selectionBoxLeft = new SelectionBox(
       selectionBoxLeftDiv,
-      this.posX,
+      this.posX + 55,
       this.posY + this.height / 2,
-      this,
-      "left"
+      "left",
+      selectionBoxWidth,
+      selectionBoxHeight
     );
     this.selectionBoxTop = new SelectionBox(
       selectionBoxTopDiv,
       this.posX + this.width / 2,
       this.posY,
-      this,
-      "top"
+      "top",
+      selectionBoxWidth,
+      selectionBoxHeight
     );
     this.selectionBoxRight = new SelectionBox(
       selectionBoxRightDiv,
       this.posX + this.width,
       this.posY + this.height / 2,
-      this,
-      "right"
+      "right",
+      selectionBoxWidth,
+      selectionBoxHeight
     );
     this.selectionBoxBottom = new SelectionBox(
       selectionBoxBottomDiv,
       this.posX + this.width / 2,
       this.posY + this.height,
-      this,
-      "bottom"
+      "bottom",
+      selectionBoxWidth,
+      selectionBoxHeight
     );
+
+    const offsetX = sprite.width / 2 - selectionBoxWidth / 2;
+    const offsetY = sprite.height / 2 - selectionBoxWidth / 2;
+    this.UpdateSelectionBoxPositions(pos.x, pos.y, offsetX, offsetY);
+    ////////////////////////////////////////////////////////////////////////////
   }
   updatePos(x, y) {
     this.posX = x;
@@ -79,11 +89,11 @@ class SelectionArea extends StaticTexture {
     this.UpdateSelectionBoxPositions(x, y);
   }
 
-  UpdateSelectionBoxPositions(x, y) {
-    this.selectionBoxLeft.updatePos(x, y);
-    this.selectionBoxTop.updatePos(x, y);
-    this.selectionBoxRight.updatePos(x, y);
-    this.selectionBoxBottom.updatePos(x, y);
+  UpdateSelectionBoxPositions(x, y, offsetX, offsetY) {
+    this.selectionBoxLeft.updatePos(x, y + offsetY);
+    this.selectionBoxTop.updatePos(x + offsetX, y - offsetY / 2 + 15);
+    this.selectionBoxRight.updatePos(x + offsetX * 2, y + offsetY);
+    this.selectionBoxBottom.updatePos(x + offsetX, y + offsetY * 2);
   }
   Show() {
     this.image.style.display = "block";
@@ -105,5 +115,10 @@ class SelectionArea extends StaticTexture {
     this.selectionBoxTop.image.remove();
     this.selectionBoxRight.image.remove();
     this.selectionBoxBottom.image.remove();
+  }
+  SetPos(x, y) {
+    this.posX = x;
+    this.posY = y;
+    super.Draw(x, y);
   }
 }

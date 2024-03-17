@@ -10,21 +10,27 @@ class EventObject {
   }
   onMouseDown(e) {
     console.log("mousedown");
-    this.onMouseDown(e);
+    this.onMouseDownCallback(e);
   }
   onMouseMove(e) {
     console.log("mousemove");
-    this.onMouseMove(e);
+    this.onMouseMoveCallback(e);
   }
   onMouseUp(e) {
     console.log("mouseup");
-    this.onMouseUp(e);
+    this.onMouseUpCallback(e);
   }
   onKeyDown(e) {
     if (e.key === "Escape") {
-      this.onKeyEscapeDown();
+      this.onKeyEscapeDownCallback();
     } else if (e.key === "Delete") {
-      this.onKeyDeleteDown();
+      this.onKeyDeleteDownCallback();
     }
   }
+
+  onMouseDownCallback(e) {}
+  onMouseMoveCallback(e) {}
+  onMouseUpCallback(e) {}
+  onKeyEscapeDownCallback() {}
+  onKeyDeleteDownCallback() {}
 }

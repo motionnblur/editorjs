@@ -14,25 +14,19 @@ class Editor extends EventObject {
     _editor = this;
     this.spriteMap = new Map();
   }
-  onKeyEscapeDown() {
-    console.log("escape editor");
-
+  onKeyEscapeDownCallback() {
     if (this.currentSprite) {
       this.currentSprite.HideSelectionArea();
       this.currentSprite = null;
     }
   }
-  onKeyDeleteDown() {
-    console.log("delete editor");
-
+  onKeyDeleteDownCallback() {
     if (this.currentSprite) {
       this.currentSprite.Destroy();
       this.currentSprite = null;
     }
   }
-  onMouseDown(e) {
-    console.log("down editor");
-
+  onMouseDownCallback(e) {
     if (e.target.tagName !== "IMG") {
       if (this.currentSprite) {
         this.currentSprite.HideSelectionArea();
@@ -43,7 +37,6 @@ class Editor extends EventObject {
       if (this.currentSprite === null) {
         this.currentSprite = newSelectedSprite;
         this.currentSprite.ShowSelectionArea();
-        console.log("return");
         return;
       }
 
@@ -62,15 +55,12 @@ class Editor extends EventObject {
       this.currentSprite = newSelectedSprite;
     }
   }
-  onMouseUp(e) {
-    console.log("up editor");
-
+  onMouseUpCallback(e) {
     if (this.currentSprite) {
       this.currentSprite.SetMovable(false);
     }
   }
-  onMouseMove(e) {
-    console.log("move editor");
+  onMouseMoveCallback(e) {
     if (this.currentSprite) {
       this.currentSprite.UpdatePos(e);
     }

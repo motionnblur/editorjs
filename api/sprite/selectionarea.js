@@ -2,7 +2,8 @@ class SelectionArea extends StaticTexture {
   constructor(sprite, pos, width) {
     super(pos, sprite.image);
 
-    this.widthOffset = width;
+    this.spriteWidth = sprite.width;
+
     this.width = sprite.width + width;
     this.height = sprite.height + width;
 
@@ -71,10 +72,10 @@ class SelectionArea extends StaticTexture {
     this.posX = x;
     this.posY = y;
 
-    const halfWidth = this.width / 2;
-    const quarterWidth = halfWidth / 2;
+    const widthOffset = this.width - this.spriteWidth;
+    const half = widthOffset / 2;
 
-    this.Draw(x - halfWidth + quarterWidth, y - halfWidth + quarterWidth);
+    this.Draw(x - half, y - half);
     this.UpdateSelectionBoxPositions(x, y);
   }
 

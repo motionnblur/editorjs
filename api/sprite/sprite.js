@@ -1,6 +1,6 @@
 class SpriteItem extends DynamicTexture {
   constructor(image, ev, width, height) {
-    super(ev, image);
+    super(ev, image, width, height);
 
     this.width = width;
     this.height = height;
@@ -9,7 +9,7 @@ class SpriteItem extends DynamicTexture {
       x: ev.clientX,
       y: ev.clientY,
     };
-    this.selectionArea = new SelectionArea(this, pos, 70);
+    this.selectionArea = new SelectionArea(this, pos, 25);
   }
 
   MouseDown(x, y) {

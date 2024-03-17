@@ -1,5 +1,5 @@
 class DynamicTexture extends Draggable {
-  constructor(pos, image) {
+  constructor(pos, image, width, height) {
     super(pos, image);
 
     this.image = image;
@@ -10,6 +10,8 @@ class DynamicTexture extends Draggable {
     this.image.style.top = pos.y + "px";
     this.image.draggable = false;
     this.image.classList.add("img");
+    this.image.style.width = width + "px";
+    this.image.style.height = height + "px";
   }
   Display() {
     this.image.style.display = "block";

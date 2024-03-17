@@ -68,14 +68,13 @@ class SelectionArea extends StaticTexture {
     );
   }
   updatePos(x, y) {
-    const widthOffset = this.widthOffset / 2;
-
     this.posX = x;
     this.posY = y;
 
-    this.image.style.left = x - widthOffset + "px";
-    this.image.style.top = y - widthOffset + "px";
+    const halfWidth = this.width / 2;
+    const quarterWidth = halfWidth / 2;
 
+    this.Draw(x - halfWidth + quarterWidth, y - halfWidth + quarterWidth);
     this.UpdateSelectionBoxPositions(x, y);
   }
 

@@ -9,7 +9,7 @@ class SpriteItem extends DynamicTexture {
       x: ev.clientX,
       y: ev.clientY,
     };
-    this.selectionArea = new SelectionArea(this, pos, 30);
+    this.selectionArea = new SelectionArea(this, pos, 70);
   }
 
   MouseDown(x, y) {

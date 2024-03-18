@@ -6,6 +6,7 @@ var offset = {
   x: 0,
   y: 0,
 };
+var spriteArray = [];
 var selectionAreaWidth = 40;
 var selectionArea = document.createElement("div");
 selectionArea.classList.add("selection-area");
@@ -28,21 +29,13 @@ function dropHandler(ev) {
       if (item.kind === "file" && item.type === "image/png") {
         const file = item.getAsFile();
 
-        var img = document.createElement("img");
-        var src = document.getElementById("root");
-        img.src = URL.createObjectURL(file);
-        img.draggable = false;
+        const sprite = new Sprite(file, 50, 50, {
+          x: ev.clientX,
+          y: ev.clientY,
+        });
+        spriteArray.push(sprite);
 
-        img.classList.add("img");
-        img.classList.add("onMouseDownAnim");
-
-        img.style.position = "absolute";
-        img.style.left = ev.clientX + "px";
-        img.style.top = ev.clientY + "px";
-
-        img.addEventListener("mousedown", onMouseDownSprite);
-
-        src.appendChild(img);
+        //currentSelectedSprite = sprite;
       }
     });
   } else {
@@ -76,16 +69,15 @@ function onMouseDownRoot(e) {
 function onMouseUpRoot() {
   console.log("mouse up root page");
   selectionArea.style.zIndex = 1;
-  currentSelectedSprite.style.zIndex = 5;
+  currentSelectedSprite.image.style.zIndex = 5;
   currentSelectedSprite = null;
 }
 
 function onMouseDownSprite(e) {
-  console.log("mouse down sprite");
-  currentSelectedSprite = this;
-  currentSelectedSprite.style.zIndex = 100;
+  /* currentSelectedSprite = e.target;
+  currentSelectedSprite.image.style.zIndex = 100;
 
-  currentSpriteTemp = this;
+  currentSpriteTemp = currentSelectedSprite;
   const leftInt = parseInt(this.style.left);
   const topInt = parseInt(this.style.top);
   offset = {
@@ -93,12 +85,12 @@ function onMouseDownSprite(e) {
     y: e.clientY - topInt,
   };
 
-  addSelectionAreaToSprite(currentSpriteTemp);
+  addSelectionAreaToSprite(currentSpriteTemp); */
 }
 function onMouseMoveRoot(e) {
   if (currentSelectedSprite) {
-    currentSelectedSprite.style.left = e.clientX - offset.x + "px";
-    currentSelectedSprite.style.top = e.clientY - offset.y + "px";
+    currentSelectedSprite.image.style.left = e.clientX - offset.x + "px";
+    currentSelectedSprite.image.style.top = e.clientY - offset.y + "px";
     if (selectionArea) {
       selectionArea.style.left =
         e.clientX - offset.x - selectionAreaWidth / 2 + "px";
@@ -132,3 +124,47 @@ function addSelectionAreaToSprite() {
   selectionArea.style.position = "absolute";
   _root.appendChild(selectionArea);
 }
+class Sprite {
+  constructor(file, width, height, pos) {
+    this.AssignToDom(file, width, height, pos);
+
+    Object.assign(this, TextureMixin, EventObjectMixin);
+    TextureMixin.constructor.call(this, width, height, pos);
+    EventObjectMixin.constructor.call(this);
+  }
+  AssignToDom(file, width, height, pos) {
+    var img = document.createElement("img");
+    var src = document.getElementById("root");
+    img.src = URL.createObjectURL(file);
+    img.draggable = false;
+
+    img.classList.add("img");
+    img.classList.add("onMouseDownAnim");
+
+    img.style.position = "absolute";
+    img.style.left = pos.x + "px";
+    img.style.top = pos.y + "px";
+
+    this.image = img;
+    src.appendChild(img);
+  }
+  onMouseDownCallback() {
+    currentSelectedSprite = this;
+  }
+}
+const TextureMixin = {
+  constructor(width, height, pos) {
+    this.image.style.width = width + "px";
+    this.image.style.height = height + "px";
+    this.image.style.left = pos.x + "px";
+    this.image.style.top = pos.y + "px";
+  },
+};
+const EventObjectMixin = {
+  constructor() {
+    this.image.addEventListener("mousedown", this.onMouseDown.bind(this));
+  },
+  onMouseDown() {
+    this.onMouseDownCallback();
+  },
+};

@@ -1,7 +1,5 @@
-class SelectionArea extends StaticTexture {
+class SelectionArea {
   constructor(sprite, pos, width) {
-    super(pos, sprite.image);
-
     this.spriteWidth = sprite.width;
 
     this.width = sprite.width + width;
@@ -9,18 +7,6 @@ class SelectionArea extends StaticTexture {
 
     this.posX = sprite.posX - width / 2;
     this.posY = sprite.posY - width / 2;
-
-    const selectionArea = document.createElement("div");
-    this.image = selectionArea;
-
-    selectionArea.classList.add("selection-area");
-    selectionArea.style.left = this.posX + "px";
-    selectionArea.style.top = this.posY + "px";
-    selectionArea.style.width = this.width + "px";
-    selectionArea.style.height = this.height + "px";
-    selectionArea.style.display = "none";
-
-    _root.appendChild(selectionArea);
     ////////////////////////////////////////////////////////////////////////////
     const selectionBoxLeftDiv = document.createElement("div");
     const selectionBoxTopDiv = document.createElement("div");
@@ -96,12 +82,9 @@ class SelectionArea extends StaticTexture {
     currentSpriteImage.style.height = currentSpriteHeight + "px";
     currentSpriteImage.style.width = currentSpriteWidth + "px";
 
-    const offsetX = currentSpriteWidth / 2; //bug selectionBoxWidth is null
+    const offsetX = currentSpriteWidth / 2;
     const offsetY = currentSpriteHeight / 2;
 
-    console.log(currentSpriteHeight);
-
-    //bug
     this.selectionBoxOffsets = {
       x: offsetX - 5,
       y: offsetY - 5,
@@ -115,15 +98,6 @@ class SelectionArea extends StaticTexture {
     );
   }
   updatePos(x, y) {
-    this.posX = x;
-    this.posY = y;
-
-    const widthOffset = this.width - currentSpriteWidth;
-    const half = widthOffset / 2;
-
-    //console.log(this.selectionBoxOffsets.x, this.selectionBoxOffsets.y); //bug
-
-    this.Draw(x - half, y - half);
     this.UpdateSelectionBoxPositions(
       x,
       y,
@@ -133,35 +107,28 @@ class SelectionArea extends StaticTexture {
   }
 
   UpdateSelectionBoxPositions(x, y, offsetX, offsetY) {
-    //console.log(x, y); //bug x ve y ler değişmiyor
     this.selectionBoxLeft.updatePos(x, y + offsetY);
     this.selectionBoxTop.updatePos(x + offsetX, y);
     this.selectionBoxRight.updatePos(x + offsetX * 2, y + offsetY);
     this.selectionBoxBottom.updatePos(x + offsetX, y + offsetY * 2);
   }
   Show() {
-    this.image.style.display = "block";
     this.selectionBoxLeft.Display();
     this.selectionBoxTop.Display();
     this.selectionBoxRight.Display();
     this.selectionBoxBottom.Display();
-    currentSelectionAreaImage = this.image;
   }
   Hide() {
-    this.image.style.display = "none";
     this.selectionBoxLeft.Hide();
     this.selectionBoxTop.Hide();
     this.selectionBoxRight.Hide();
     this.selectionBoxBottom.Hide();
-    currentSelectionAreaImage = null;
   }
   Destroy() {
-    this.image.remove();
     this.selectionBoxLeft.image.remove();
     this.selectionBoxTop.image.remove();
     this.selectionBoxRight.image.remove();
     this.selectionBoxBottom.image.remove();
-    currentSelectionAreaImage = null;
   }
   SetPos(x, y) {
     this.posX = x;

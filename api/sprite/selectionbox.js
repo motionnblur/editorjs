@@ -26,6 +26,11 @@ class SelectionBox extends DynamicTexture {
       x: 0,
       y: 0,
     };
+    this.firstPos = {
+      x: x,
+      y: y,
+    };
+
     reactor.addEventListener("onUpdateOffsets", this.onUpdateOffset.bind(this));
   }
   onUpdateOffset(e) {
@@ -41,6 +46,11 @@ class SelectionBox extends DynamicTexture {
   updatePos(x, y) {
     this.posX = x;
     this.posY = y;
+
+    this.firstPos = {
+      x: x,
+      y: y,
+    };
 
     this.Draw(x, y);
   }
@@ -83,23 +93,13 @@ class SelectionBox extends DynamicTexture {
 
   ResizeSprite(e) {
     if (this.name === "left") {
-      const newWidth =
-        currentSpriteWidth +
-        (this.posX - e.clientX) +
-        this.offsetFromSelectionArea.x;
+      const lastBoxPosX = this.posX;
+      const diff = lastBoxPosX - this.firstMousePos.x + this.offsetFromMouse.x;
+
+      const newWidth = currentSpriteWidth + diff * -1;
 
       currentSpriteImage.style.width = newWidth + "px";
-
-      const slideAmountX =
-        newPosX + 22.5 - parseFloat(currentSpriteImage.style.left);
-
-      currentSpriteImage.style.left =
-        parseFloat(currentSpriteImage.style.left) + slideAmountX + "px";
-
-      currentSelectionAreaImage.style.width =
-        newWidth + this.offsetFromSelectionArea.x + "px";
-      currentSelectionAreaImage.style.left =
-        parseFloat(currentSelectionAreaImage.style.left) + slideAmountX + "px";
+      currentSpriteImage.style.left = this.posX + "px";
     } else if (this.name === "top") {
       const newHeight =
         currentSpriteHeight +
@@ -113,11 +113,6 @@ class SelectionBox extends DynamicTexture {
 
       currentSpriteImage.style.top =
         parseFloat(currentSpriteImage.style.top) + slideAmountY + "px";
-
-      currentSelectionAreaImage.style.height =
-        newHeight + this.offsetFromSelectionArea.x + "px";
-      currentSelectionAreaImage.style.top =
-        parseFloat(currentSelectionAreaImage.style.top) + slideAmountY + "px";
     } else if (this.name === "right") {
       const lastBoxPosX = this.posX;
       const diff = lastBoxPosX - this.firstMousePos.x + this.offsetFromMouse.x;
@@ -125,11 +120,6 @@ class SelectionBox extends DynamicTexture {
       const newWidth = currentSpriteWidth + diff;
 
       currentSpriteImage.style.width = newWidth + "px";
-
-      currentSelectionAreaImage.style.width =
-        newWidth + this.offsetFromSelectionArea.x + "px";
-      currentSelectionAreaImage.style.left =
-        parseFloat(currentSelectionAreaImage.style.left) + "px";
     } else if (this.name === "bottom") {
       const newPosY = e.clientY - this.offsetFromSelectionArea.y;
       this.image.style.top = newPosY + "px";
@@ -140,11 +130,6 @@ class SelectionBox extends DynamicTexture {
         this.offsetFromSelectionArea.y;
 
       currentSpriteImage.style.height = newHeight + "px";
-
-      currentSelectionAreaImage.style.height =
-        newHeight + this.offsetFromSelectionArea.x + "px";
-      currentSelectionAreaImage.style.top =
-        parseFloat(currentSelectionAreaImage.style.top) + "px";
     }
   }
 }

@@ -15,6 +15,8 @@ class Editor extends EventObject {
     this.spriteMap = new Map();
 
     reactor.registerEvent("onSelectionBox");
+    reactor.registerEvent("onUpdateOffsets");
+
     reactor.addEventListener("onSelectionBox", this.onSelectionBoxDown);
   }
   onSelectionBoxDown(e) {
@@ -77,6 +79,7 @@ class Editor extends EventObject {
     }
     if (isMouseDownSelectionBox) {
       isMouseDownSelectionBox = false;
+      reactor.dispatchEvent("onUpdateOffsets", e);
     }
   }
   onMouseMoveCallback(e) {

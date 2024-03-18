@@ -15,3 +15,7 @@ var firstAreaPos = { x: 0, y: 0 };
 var lastAreaPos = { x: 0, y: 0 };
 var offsetFromSelectionArea = { x: 0, y: 0 };
 var offsetFromSelectionBos = { x: 0, y: 0 };
+var selectionBoxOffsets = { x: 0, y: 0 };
+
+var widthTemp = 0;
+var heightTemp = 0;

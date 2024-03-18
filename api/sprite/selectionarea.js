@@ -82,12 +82,28 @@ class SelectionArea extends StaticTexture {
     this.UpdateSelectionBoxPositions(pos.x, pos.y, offsetX, offsetY);
 
     ////////////////////////////////////////////////////////////////////////////
+    reactor.addEventListener(
+      "onUpdateOffsets",
+      this.onUpdateOffsets.bind(this)
+    );
+  }
+  onUpdateOffsets() {
+    currentSpriteHeight = heightTemp;
+    currentSpriteWidth = widthTemp;
+
+    const offsetX = currentSpriteWidth / 2 - this.selectionBoxWidth / 2;
+    const offsetY = currentSpriteHeight / 2 - this.selectionBoxWidth / 2;
+    this.selectionBoxOffsets = {
+      x: offsetX,
+      y: offsetY,
+    };
+    this.UpdateSelectionBoxPositions(this.posX, this.posY, offsetX, offsetY);
   }
   updatePos(x, y) {
     this.posX = x;
     this.posY = y;
 
-    const widthOffset = this.width - this.spriteWidth;
+    const widthOffset = this.width - currentSpriteWidth;
     const half = widthOffset / 2;
 
     this.Draw(x - half, y - half);

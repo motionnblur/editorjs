@@ -100,6 +100,7 @@ class SelectionBox extends DynamicTexture {
 
       currentSpriteImage.style.width = newWidth + "px";
       currentSpriteImage.style.left = this.posX + "px";
+      widthTemp = newWidth;
     } else if (this.name === "top") {
       const lastBoxPosY = this.posY;
       const diff = lastBoxPosY - this.firstMousePos.y + this.offsetFromMouse.y;
@@ -108,6 +109,8 @@ class SelectionBox extends DynamicTexture {
 
       currentSpriteImage.style.height = newHeight + "px";
       currentSpriteImage.style.top = this.posY + "px";
+
+      heightTemp = newHeight;
     } else if (this.name === "right") {
       const lastBoxPosX = this.posX;
       const diff = lastBoxPosX - this.firstMousePos.x + this.offsetFromMouse.x;
@@ -115,6 +118,8 @@ class SelectionBox extends DynamicTexture {
       const newWidth = currentSpriteWidth + diff;
 
       currentSpriteImage.style.width = newWidth + "px";
+
+      widthTemp = newWidth;
     } else if (this.name === "bottom") {
       const lastBoxPosY = this.posY;
       const diff = lastBoxPosY - this.firstMousePos.y + this.offsetFromMouse.y;
@@ -123,6 +128,8 @@ class SelectionBox extends DynamicTexture {
 
       currentSpriteImage.style.height = newHeight + "px";
       //currentSpriteImage.style.top = this.posY + "px";
+
+      heightTemp = newHeight;
     }
   }
 }

@@ -72,9 +72,11 @@ class SelectionArea extends StaticTexture {
       selectionBoxWidth,
       selectionBoxHeight
     );
+    this.selectionBoxWidth = selectionBoxWidth;
 
     const offsetX = sprite.width / 2 - selectionBoxWidth / 2;
     const offsetY = sprite.height / 2 - selectionBoxWidth / 2;
+
     this.selectionBoxOffsets = {
       x: offsetX,
       y: offsetY,
@@ -91,13 +93,26 @@ class SelectionArea extends StaticTexture {
     currentSpriteHeight = heightTemp;
     currentSpriteWidth = widthTemp;
 
-    const offsetX = currentSpriteWidth / 2 - this.selectionBoxWidth / 2;
-    const offsetY = currentSpriteHeight / 2 - this.selectionBoxWidth / 2;
+    currentSpriteImage.style.height = currentSpriteHeight + "px";
+    currentSpriteImage.style.width = currentSpriteWidth + "px";
+
+    const offsetX = currentSpriteWidth / 2; //bug selectionBoxWidth is null
+    const offsetY = currentSpriteHeight / 2;
+
+    console.log(currentSpriteHeight);
+
+    //bug
     this.selectionBoxOffsets = {
-      x: offsetX,
-      y: offsetY,
+      x: offsetX - 5,
+      y: offsetY - 5,
     };
-    this.UpdateSelectionBoxPositions(this.posX, this.posY, offsetX, offsetY);
+
+    this.UpdateSelectionBoxPositions(
+      parseFloat(currentSpriteImage.style.left),
+      parseFloat(currentSpriteImage.style.top),
+      offsetX - 5,
+      offsetY - 5
+    );
   }
   updatePos(x, y) {
     this.posX = x;
@@ -105,6 +120,8 @@ class SelectionArea extends StaticTexture {
 
     const widthOffset = this.width - currentSpriteWidth;
     const half = widthOffset / 2;
+
+    //console.log(this.selectionBoxOffsets.x, this.selectionBoxOffsets.y); //bug
 
     this.Draw(x - half, y - half);
     this.UpdateSelectionBoxPositions(
@@ -116,8 +133,9 @@ class SelectionArea extends StaticTexture {
   }
 
   UpdateSelectionBoxPositions(x, y, offsetX, offsetY) {
+    //console.log(x, y); //bug x ve y ler değişmiyor
     this.selectionBoxLeft.updatePos(x, y + offsetY);
-    this.selectionBoxTop.updatePos(x + offsetX, y - offsetY / 2 + 15);
+    this.selectionBoxTop.updatePos(x + offsetX, y);
     this.selectionBoxRight.updatePos(x + offsetX * 2, y + offsetY);
     this.selectionBoxBottom.updatePos(x + offsetX, y + offsetY * 2);
   }

@@ -15,10 +15,14 @@ class Editor extends EventObject {
     this.spriteMap = new Map();
 
     reactor.registerEvent("onSelectionBox");
-    reactor.addEventListener("onSelectionBox", this.onSelectionBox);
+    reactor.addEventListener("onSelectionBox", this.onSelectionBoxDown);
   }
-  onSelectionBox(e) {
-    alert(e.box_name);
+  onSelectionBoxDown(e) {
+    if (e.box_name) {
+      isMouseDownSelectionBox = true;
+    } else {
+      isMouseDownSelectionBox = false;
+    }
   }
   onKeyEscapeDownCallback() {
     if (this.currentSprite) {
@@ -33,10 +37,10 @@ class Editor extends EventObject {
     }
   }
   onMouseDownCallback(e) {
+    if (isMouseDownSelectionBox) {
+      return;
+    }
     if (e.target.tagName !== "IMG") {
-      if (e.target.className === "selection-box img") {
-        return;
-      }
       if (this.currentSprite) {
         this.currentSprite.HideSelectionArea();
         this.currentSprite = null;
@@ -67,6 +71,9 @@ class Editor extends EventObject {
   onMouseUpCallback(e) {
     if (this.currentSprite) {
       this.currentSprite.SetMovable(false);
+    }
+    if (isMouseDownSelectionBox) {
+      isMouseDownSelectionBox = false;
     }
   }
   onMouseMoveCallback(e) {

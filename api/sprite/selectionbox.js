@@ -25,8 +25,12 @@ class SelectionBox extends DynamicTexture {
   onMouseDown(e) {
     reactor.dispatchEvent("onSelectionBox", { box_name: this.name });
   }
+  onMouseMove(e) {
+    if (!isMouseDownSelectionBox) return;
+    this.ResizeSprite(e);
+  }
 
-  /* ResizeSprite(e) {
+  ResizeSprite(e) {
     if (this.name === "left") {
       const newPosX = e.clientX - this.offset.x;
       this.image.style.left = newPosX + "px";
@@ -94,5 +98,5 @@ class SelectionBox extends DynamicTexture {
       this.selectionArea.image.style.top =
         parseFloat(this.selectionArea.image.style.top) + "px";
     }
-  } */
+  }
 }

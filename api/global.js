@@ -11,3 +11,4 @@ var lastAreaPos = {
 };
 var rootMouseDown = false;
 var resizeStage = false;
+var isMouseDownSelectionBox = false;

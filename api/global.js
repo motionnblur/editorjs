@@ -9,6 +9,7 @@ var currentSpriteImage = null;
 var currentSelectionAreaImage = null;
 
 var currentSpriteWidth = 0;
+var currentSpriteHeight = 0;
 
 var firstAreaPos = { x: 0, y: 0 };
 var lastAreaPos = { x: 0, y: 0 };

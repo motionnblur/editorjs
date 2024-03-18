@@ -5,6 +5,9 @@ class SpriteItem extends DynamicTexture {
     this.width = width;
     this.height = height;
 
+    currentSpriteWidth = width;
+    currentSpriteHeight = height;
+
     this.selectionArea = new SelectionArea(
       this,
       {

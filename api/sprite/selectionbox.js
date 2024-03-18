@@ -13,6 +13,15 @@ class SelectionBox extends DynamicTexture {
 
     super.SetWidth(width);
     super.SetHeight(height);
+
+    this.offsetFromSelectionArea = {
+      x: 0,
+      y: 0,
+    };
+    this.offsetFromMouse = {
+      x: 0,
+      y: 0,
+    };
   }
   updatePos(x, y) {
     this.posX = x;
@@ -24,21 +33,40 @@ class SelectionBox extends DynamicTexture {
   MouseDown(x, y) {}
   onMouseDown(e) {
     reactor.dispatchEvent("onSelectionBox", { box_name: this.name });
+    this.offsetFromSelectionArea = {
+      x: this.posX - parseFloat(currentSelectionAreaImage.style.left),
+      y: this.posY - parseFloat(currentSelectionAreaImage.style.top),
+    };
+    this.offsetFromMouse = {
+      x: e.clientX - this.posX,
+      y: e.clientY - this.posY,
+    };
   }
   onMouseMove(e) {
     if (!isMouseDownSelectionBox) return;
-    this.ResizeSprite(e);
+
+    if (this.name === "left") {
+      super.Draw(e.clientX - this.offsetFromMouse.x, this.posY);
+    } else if (this.name === "top") {
+      super.Draw(this.posX, e.clientY - this.offsetFromMouse.y);
+    } else if (this.name === "right") {
+      super.Draw(e.clientX - this.offsetFromMouse.x, this.posY);
+    } else if (this.name === "bottom") {
+      super.Draw(this.posX, e.clientY - this.offsetFromMouse.y);
+    }
+
+    //this.ResizeSprite(e);
   }
 
   ResizeSprite(e) {
     if (this.name === "left") {
-      const newPosX = e.clientX - offsetFromSelectionArea.x;
+      const newPosX = e.clientX - this.offsetFromSelectionArea.x;
       this.image.style.left = newPosX + "px";
 
       const newWidth =
         currentSpriteWidth +
         (this.posX - e.clientX) +
-        offsetFromSelectionArea.x;
+        this.offsetFromSelectionArea.x;
 
       currentSpriteImage.style.width = newWidth + "px";
 
@@ -49,17 +77,17 @@ class SelectionBox extends DynamicTexture {
         parseFloat(currentSpriteImage.style.left) + slideAmountX + "px";
 
       currentSelectionAreaImage.style.width =
-        newWidth + offsetFromSelectionArea.x + "px";
+        newWidth + this.offsetFromSelectionArea.x + "px";
       currentSelectionAreaImage.style.left =
         parseFloat(currentSelectionAreaImage.style.left) + slideAmountX + "px";
     } else if (this.name === "top") {
-      const newPosY = e.clientY - offsetFromSelectionArea.y;
+      const newPosY = e.clientY - this.offsetFromSelectionArea.y;
       this.image.style.top = newPosY + "px";
 
       const newHeight =
         currentSpriteHeight +
         (this.posY - e.clientY) +
-        offsetFromSelectionArea.y;
+        this.offsetFromSelectionArea.y;
 
       currentSpriteImage.style.height = newHeight + "px";
 
@@ -70,37 +98,37 @@ class SelectionBox extends DynamicTexture {
         parseFloat(currentSpriteImage.style.top) + slideAmountY + "px";
 
       currentSelectionAreaImage.style.height =
-        newHeight + offsetFromSelectionArea.x + "px";
+        newHeight + this.offsetFromSelectionArea.x + "px";
       currentSelectionAreaImage.style.top =
         parseFloat(currentSelectionAreaImage.style.top) + slideAmountY + "px";
     } else if (this.name === "right") {
-      const newPosX = e.clientX - offsetFromSelectionArea.x;
+      const newPosX = e.clientX - this.offsetFromSelectionArea.x;
       this.image.style.left = newPosX + "px";
 
       const newWidth =
         currentSpriteWidth +
         (e.clientX - this.posX) -
-        offsetFromSelectionArea.x;
+        this.offsetFromSelectionArea.x;
 
       currentSpriteImage.style.width = newWidth + "px";
       console.log(currentSpriteImage);
       currentSelectionAreaImage.style.width =
-        newWidth + offsetFromSelectionArea.x + "px";
+        newWidth + this.offsetFromSelectionArea.x + "px";
       currentSelectionAreaImage.style.left =
         parseFloat(currentSelectionAreaImage.style.left) + "px";
     } else if (this.name === "bottom") {
-      const newPosY = e.clientY - offsetFromSelectionArea.y;
+      const newPosY = e.clientY - this.offsetFromSelectionArea.y;
       this.image.style.top = newPosY + "px";
 
       const newHeight =
         currentSpriteHeight +
         (e.clientY - this.posY) -
-        offsetFromSelectionArea.y;
+        this.offsetFromSelectionArea.y;
 
       currentSpriteImage.style.height = newHeight + "px";
 
       currentSelectionAreaImage.style.height =
-        newHeight + offsetFromSelectionArea.x + "px";
+        newHeight + this.offsetFromSelectionArea.x + "px";
       currentSelectionAreaImage.style.top =
         parseFloat(currentSelectionAreaImage.style.top) + "px";
     }

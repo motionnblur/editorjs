@@ -44,6 +44,7 @@ class Editor extends EventObject {
       if (this.currentSprite) {
         this.currentSprite.HideSelectionArea();
         this.currentSprite = null;
+        if (currentSpriteImage) currentSpriteImage = null;
       }
     } else if (e.target.tagName === "IMG") {
       const newSelectedSprite = this.spriteMap.get(e.target);
@@ -56,11 +57,13 @@ class Editor extends EventObject {
       if (this.currentSprite) {
         if (this.currentSprite !== newSelectedSprite) {
           this.currentSprite.HideSelectionArea();
+          if (currentSpriteImage) currentSpriteImage = null;
         }
         if (!this.currentSprite.isSelectionAreaOpen) {
           if (this.currentSprite.isSelected) {
           } else {
             this.currentSprite.HideSelectionArea();
+            if (currentSpriteImage) currentSpriteImage = null;
             this.currentSprite = null;
           }
         }

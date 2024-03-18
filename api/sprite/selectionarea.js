@@ -111,6 +111,7 @@ class SelectionArea extends StaticTexture {
     this.selectionBoxTop.Display();
     this.selectionBoxRight.Display();
     this.selectionBoxBottom.Display();
+    currentSelectionAreaImage = this.image;
   }
   Hide() {
     this.image.style.display = "none";
@@ -118,6 +119,7 @@ class SelectionArea extends StaticTexture {
     this.selectionBoxTop.Hide();
     this.selectionBoxRight.Hide();
     this.selectionBoxBottom.Hide();
+    currentSelectionAreaImage = null;
   }
   Destroy() {
     this.image.remove();
@@ -125,6 +127,7 @@ class SelectionArea extends StaticTexture {
     this.selectionBoxTop.image.remove();
     this.selectionBoxRight.image.remove();
     this.selectionBoxBottom.image.remove();
+    currentSelectionAreaImage = null;
   }
   SetPos(x, y) {
     this.posX = x;

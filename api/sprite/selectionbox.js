@@ -32,71 +32,77 @@ class SelectionBox extends DynamicTexture {
 
   ResizeSprite(e) {
     if (this.name === "left") {
-      const newPosX = e.clientX - this.offset.x;
+      const newPosX = e.clientX - offsetFromSelectionArea.x;
       this.image.style.left = newPosX + "px";
 
-      const spriteWidth = this.selectionArea.GetSpriteWidth();
-      const spriteImg = this.selectionArea.GetSpriteImg();
-      const newWidth = spriteWidth + (this.posX - e.clientX) + this.offset.x;
+      const newWidth =
+        currentSpriteWidth +
+        (this.posX - e.clientX) +
+        offsetFromSelectionArea.x;
 
-      spriteImg.style.width = newWidth + "px";
+      currentSpriteImage.style.width = newWidth + "px";
 
-      const slideAmountX = newPosX + 22.5 - parseFloat(spriteImg.style.left);
+      const slideAmountX =
+        newPosX + 22.5 - parseFloat(currentSpriteImage.style.left);
 
-      spriteImg.style.left =
-        parseFloat(spriteImg.style.left) + slideAmountX + "px";
+      currentSpriteImage.style.left =
+        parseFloat(currentSpriteImage.style.left) + slideAmountX + "px";
 
-      this.selectionArea.image.style.width =
-        newWidth + this.selectionArea.widthOffset + "px";
-      this.selectionArea.image.style.left =
-        parseFloat(this.selectionArea.image.style.left) + slideAmountX + "px";
+      currentSelectionAreaImage.style.width =
+        newWidth + offsetFromSelectionArea.x + "px";
+      currentSelectionAreaImage.style.left =
+        parseFloat(currentSelectionAreaImage.style.left) + slideAmountX + "px";
     } else if (this.name === "top") {
-      const newPosY = e.clientY - this.offset.y;
+      const newPosY = e.clientY - offsetFromSelectionArea.y;
       this.image.style.top = newPosY + "px";
 
-      const spriteHeight = this.selectionArea.GetSpriteHeight();
-      const spriteImg = this.selectionArea.GetSpriteImg();
-      const newHeight = spriteHeight + (this.posY - e.clientY) + this.offset.y;
+      const newHeight =
+        currentSpriteHeight +
+        (this.posY - e.clientY) +
+        offsetFromSelectionArea.y;
 
-      spriteImg.style.height = newHeight + "px";
+      currentSpriteImage.style.height = newHeight + "px";
 
-      const slideAmountY = newPosY + 22.5 - parseFloat(spriteImg.style.top);
+      const slideAmountY =
+        newPosY + 22.5 - parseFloat(currentSpriteImage.style.top);
 
-      spriteImg.style.top =
-        parseFloat(spriteImg.style.top) + slideAmountY + "px";
+      currentSpriteImage.style.top =
+        parseFloat(currentSpriteImage.style.top) + slideAmountY + "px";
 
-      this.selectionArea.image.style.height =
-        newHeight + this.selectionArea.widthOffset + "px";
-      this.selectionArea.image.style.top =
-        parseFloat(this.selectionArea.image.style.top) + slideAmountY + "px";
+      currentSelectionAreaImage.style.height =
+        newHeight + offsetFromSelectionArea.x + "px";
+      currentSelectionAreaImage.style.top =
+        parseFloat(currentSelectionAreaImage.style.top) + slideAmountY + "px";
     } else if (this.name === "right") {
-      const newPosX = e.clientX - this.offset.x;
+      const newPosX = e.clientX - offsetFromSelectionArea.x;
       this.image.style.left = newPosX + "px";
 
-      const spriteWidth = this.selectionArea.GetSpriteWidth();
-      const spriteImg = this.selectionArea.GetSpriteImg();
-      const newWidth = spriteWidth + (e.clientX - this.posX) - this.offset.x;
+      const newWidth =
+        currentSpriteWidth +
+        (e.clientX - this.posX) -
+        offsetFromSelectionArea.x;
 
-      spriteImg.style.width = newWidth + "px";
-
-      this.selectionArea.image.style.width =
-        newWidth + this.selectionArea.widthOffset + "px";
-      this.selectionArea.image.style.left =
-        parseFloat(this.selectionArea.image.style.left) + "px";
+      currentSpriteImage.style.width = newWidth + "px";
+      console.log(currentSpriteImage);
+      currentSelectionAreaImage.style.width =
+        newWidth + offsetFromSelectionArea.x + "px";
+      currentSelectionAreaImage.style.left =
+        parseFloat(currentSelectionAreaImage.style.left) + "px";
     } else if (this.name === "bottom") {
-      const newPosY = e.clientY - this.offset.y;
+      const newPosY = e.clientY - offsetFromSelectionArea.y;
       this.image.style.top = newPosY + "px";
 
-      const spriteHeight = this.selectionArea.GetSpriteHeight();
-      const spriteImg = this.selectionArea.GetSpriteImg();
-      const newHeight = spriteHeight + (e.clientY - this.posY) - this.offset.y;
+      const newHeight =
+        currentSpriteHeight +
+        (e.clientY - this.posY) -
+        offsetFromSelectionArea.y;
 
-      spriteImg.style.height = newHeight + "px";
+      currentSpriteImage.style.height = newHeight + "px";
 
-      this.selectionArea.image.style.height =
-        newHeight + this.selectionArea.widthOffset + "px";
-      this.selectionArea.image.style.top =
-        parseFloat(this.selectionArea.image.style.top) + "px";
+      currentSelectionAreaImage.style.height =
+        newHeight + offsetFromSelectionArea.x + "px";
+      currentSelectionAreaImage.style.top =
+        parseFloat(currentSelectionAreaImage.style.top) + "px";
     }
   }
 }

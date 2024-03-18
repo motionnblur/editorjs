@@ -18,6 +18,7 @@ class SpriteItem extends DynamicTexture {
   MouseDown(x, y) {
     this.selectionArea.updatePos(x, y);
     this.ShowSelectionArea();
+    currentSpriteImage = this.image;
   }
 
   ShowSelectionArea() {

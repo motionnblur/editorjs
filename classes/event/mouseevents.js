@@ -1,5 +1,10 @@
 function onMouseDownRoot(e) {
   UpdateMousePosGlobally(e);
+  lastMousePos = {
+    x: e.clientX,
+    y: e.clientY,
+  };
+
   if (_editor.HasCurrentSpriteSelected()) {
     const currentSelectedSprite = _editor.GetCurrentSelectedSprite();
     if (_editor.IsPointerOnSpriteNow()) {
@@ -31,6 +36,7 @@ function onMouseMoveRoot(e) {
       );
     }
   }
+  _editor.DrawSelectArea(mousePos, lastMousePos);
 }
 
 function UpdateMousePosGlobally(e) {

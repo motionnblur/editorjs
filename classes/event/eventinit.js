@@ -4,4 +4,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
   _root.addEventListener("mouseup", onMouseUpRoot);
   _root.addEventListener("mousemove", onMouseMoveRoot);
   window.addEventListener("keydown", onKeyDownRoot);
+
+  InitDomElements();
 });

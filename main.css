@@ -31,7 +31,6 @@ body {
 .selection-area {
   position: absolute;
   background-color: rgba(166, 228, 247, 0.5);
-  z-index: 1;
-  border-radius: 100%;
+  z-index: 100;
   user-select: none;
 }

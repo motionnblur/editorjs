@@ -49,6 +49,45 @@ class Editor {
   RemoveSpriteFromArray(sprite) {
     this.spriteArray = this.spriteArray.filter((s) => s !== sprite);
   }
+  DrawSelectArea(firstAreaPos, lastAreaPos) {
+    const top = Math.min(firstAreaPos.y, lastAreaPos.y);
+    const left = Math.min(firstAreaPos.x, lastAreaPos.x);
+    const width = Math.abs(lastAreaPos.x - firstAreaPos.x);
+    const height = Math.abs(lastAreaPos.y - firstAreaPos.y);
+
+    selectAreaDiv.style.left = left + "px";
+    selectAreaDiv.style.top = top + "px";
+    selectAreaDiv.style.width = width + "px";
+    selectAreaDiv.style.height = height + "px";
+  }
+  DoSelect(firstAreaPos, lastAreaPos) {
+    const minX = Math.min(firstAreaPos.x, lastAreaPos.x);
+    const maxX = Math.max(firstAreaPos.x, lastAreaPos.x);
+    const minY = Math.min(firstAreaPos.y, lastAreaPos.y);
+    const maxY = Math.max(firstAreaPos.y, lastAreaPos.y);
+
+    this.sprites.forEach((sprite) => {
+      const spriteCenterX = sprite.posX + sprite.width / 2;
+      const spriteCenterY = sprite.posY + sprite.height / 2;
+
+      if (
+        spriteCenterX >= minX &&
+        spriteCenterX <= maxX &&
+        spriteCenterY >= minY &&
+        spriteCenterY <= maxY
+      ) {
+        sprite.SelectSprite();
+      } else {
+        sprite.DeSelectSprite();
+      }
+    });
+  }
+  ClearSelectArea() {
+    this.selectAreaDiv.style.left = 0 + "px";
+    this.selectAreaDiv.style.top = 0 + "px";
+    this.selectAreaDiv.style.width = 0 + "px";
+    this.selectAreaDiv.style.height = 0 + "px";
+  }
 
   onMouseDownCallback(e, obj) {
     this.SetMouseOffsetFromSprite(

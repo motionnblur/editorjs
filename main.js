@@ -68,9 +68,13 @@ class Sprite {
   }
   GetSpritePosition() {
     return {
-      x: parseInt(this.image.style.left),
-      y: parseInt(this.image.style.top),
+      x: parseFloat(this.image.style.left),
+      y: parseFloat(this.image.style.top),
     };
+  }
+  SetSpritePosition(mousePosX, mousePosY, offset) {
+    this.image.style.left = mousePosX - offset.x + "px";
+    this.image.style.top = mousePosY - offset.y + "px";
   }
   onMouseDownCallback(e) {
     _editor.onMouseDownCallback(e, this);
@@ -136,7 +140,6 @@ function dropHandler(ev) {
 }
 ////////////////////////////////////////////////////////////////////////////////--> MAIN DOM EVENTS
 function onKeyDownRoot(e) {
-  console.log("keydown");
   if (e.key === "Delete") {
     if (currentSpriteTemp) {
       currentSpriteTemp.remove();
@@ -159,10 +162,13 @@ function onMouseUpRoot() {
 
 function onMouseMoveRoot(e) {
   if (_editor.GetCurrentSelectedSprite()) {
-    _editor.GetCurrentSelectedSprite().image.style.left =
-      e.clientX - offset.x + "px";
-    _editor.GetCurrentSelectedSprite().image.style.top =
-      e.clientY - offset.y + "px";
+    _editor
+      .GetCurrentSelectedSprite()
+      .SetSpritePosition(
+        e.clientX,
+        e.clientY,
+        _editor.GetMouseOffsetFromSprite()
+      );
   }
 }
 ////////////////////////////////////////////////////////////////////////////////--> MAIN DOM EVENTS

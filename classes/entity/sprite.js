@@ -1,12 +1,12 @@
 class Sprite {
   constructor(file, width, height, pos) {
-    this.AssignToDom(file, width, height, pos);
+    this.AssignToDom(file, pos);
 
     Object.assign(this, TextureMixin, EventObjectMixin);
     TextureMixin.constructor.call(this, width, height, pos);
     EventObjectMixin.constructor.call(this);
   }
-  AssignToDom(file, width, height, pos) {
+  AssignToDom(file, pos) {
     var img = document.createElement("img");
     var src = document.getElementById("root");
     img.src = URL.createObjectURL(file);

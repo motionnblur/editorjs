@@ -15,8 +15,6 @@ function onMouseUpRoot(e) {
     const currentSelectedSprite = _editor.GetCurrentSelectedSprite();
     if (currentSelectedSprite.isDraggable()) {
       currentSelectedSprite.SetDraggable(false);
-    } else {
-      _editor.ClearCurrentSelectedSprite();
     }
   }
 }

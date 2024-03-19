@@ -6,7 +6,7 @@ class Sprite {
     TextureMixin.constructor.call(this, width, height, pos);
     EventObjectMixin.constructor.call(this);
 
-    this.isMovable = false;
+    this.isdraggable = true;
   }
   AssignToDom(file, pos) {
     var img = document.createElement("img");
@@ -34,11 +34,11 @@ class Sprite {
     this.image.style.left = mousePosX - offset.x + "px";
     this.image.style.top = mousePosY - offset.y + "px";
   }
-  SetMovable(_bool) {
-    this.isMovable = _bool;
+  SetDraggable(_bool) {
+    this.isdraggable = _bool;
   }
-  IsMovable() {
-    return this.isMovable;
+  isDraggable() {
+    return this.isdraggable;
   }
   Destroy() {
     this.image.remove();

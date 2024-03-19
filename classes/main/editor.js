@@ -9,7 +9,16 @@ class Editor {
     this.hasCurrentSpriteSelected = false;
   }
   IsPointerOnSpriteNow() {
-    return false;
+    return (
+      mousePos.x >= this.currentSelectedSprite.image.offsetLeft &&
+      mousePos.x <=
+        this.currentSelectedSprite.image.offsetLeft +
+          this.currentSelectedSprite.image.offsetWidth &&
+      mousePos.y >= this.currentSelectedSprite.image.offsetTop &&
+      mousePos.y <=
+        this.currentSelectedSprite.image.offsetTop +
+          this.currentSelectedSprite.image.offsetHeight
+    );
   }
   HasCurrentSpriteSelected() {
     return this.hasCurrentSpriteSelected;

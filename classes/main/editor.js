@@ -62,6 +62,10 @@ class Editor {
   }
   HideSelectArea() {
     selectAreaDiv.style.display = "none";
+    selectAreaDiv.style.left = 0 + "px";
+    selectAreaDiv.style.top = 0 + "px";
+    selectAreaDiv.style.width = 0 + "px";
+    selectAreaDiv.style.height = 0 + "px";
   }
   ShowSelectArea() {
     selectAreaDiv.style.display = "block";
@@ -87,12 +91,6 @@ class Editor {
         sprite.DeSelectSprite();
       }
     });
-  }
-  ClearSelectArea() {
-    this.selectAreaDiv.style.left = 0 + "px";
-    this.selectAreaDiv.style.top = 0 + "px";
-    this.selectAreaDiv.style.width = 0 + "px";
-    this.selectAreaDiv.style.height = 0 + "px";
   }
 
   onMouseDownCallback(e, obj) {

@@ -32,6 +32,9 @@ class Sprite {
     this.image.style.left = mousePosX - offset.x + "px";
     this.image.style.top = mousePosY - offset.y + "px";
   }
+  Destroy() {
+    this.image.remove();
+  }
   onMouseDownCallback(e) {
     _editor.onMouseDownCallback(e, this);
   }

@@ -1,112 +1,4 @@
-class Editor {
-  constructor() {
-    this.spriteArray = [];
-    this.currentSelectedSprite = null;
-    this.mouseOffsetFromSprite = {
-      x: 0,
-      y: 0,
-    };
-  }
-  SetMouseOffsetFromSprite(mosePosX, mousePosY, currentSpritePos) {
-    this.mouseOffsetFromSprite = {
-      x: mosePosX - currentSpritePos.x,
-      y: mousePosY - currentSpritePos.y,
-    };
-  }
-  GetMouseOffsetFromSprite() {
-    return this.mouseOffsetFromSprite;
-  }
-  SetCurrentSelectedSprite(sprite) {
-    this.currentSelectedSprite = sprite;
-  }
-  GetCurrentSelectedSprite() {
-    return this.currentSelectedSprite;
-  }
-  ClearCurrentSelectedSprite() {
-    this.currentSelectedSprite = null;
-  }
-  AddSpriteToArray(sprite) {
-    this.spriteArray.push(sprite);
-  }
-  RemoveSpriteFromArray(sprite) {
-    this.spriteArray = this.spriteArray.filter((s) => s !== sprite);
-  }
-
-  onMouseDownCallback(e, obj) {
-    this.SetMouseOffsetFromSprite(
-      e.clientX,
-      e.clientY,
-      obj.GetSpritePosition()
-    );
-    this.SetCurrentSelectedSprite(obj);
-  }
-}
-
-class Sprite {
-  constructor(file, width, height, pos) {
-    this.AssignToDom(file, width, height, pos);
-
-    Object.assign(this, TextureMixin, EventObjectMixin);
-    TextureMixin.constructor.call(this, width, height, pos);
-    EventObjectMixin.constructor.call(this);
-  }
-  AssignToDom(file, width, height, pos) {
-    var img = document.createElement("img");
-    var src = document.getElementById("root");
-    img.src = URL.createObjectURL(file);
-    img.draggable = false;
-
-    img.classList.add("img");
-    img.classList.add("onMouseDownAnim");
-
-    img.style.position = "absolute";
-    img.style.left = pos.x + "px";
-    img.style.top = pos.y + "px";
-
-    this.image = img;
-    src.appendChild(img);
-  }
-  GetSpritePosition() {
-    return {
-      x: parseFloat(this.image.style.left),
-      y: parseFloat(this.image.style.top),
-    };
-  }
-  SetSpritePosition(mousePosX, mousePosY, offset) {
-    this.image.style.left = mousePosX - offset.x + "px";
-    this.image.style.top = mousePosY - offset.y + "px";
-  }
-  onMouseDownCallback(e) {
-    _editor.onMouseDownCallback(e, this);
-  }
-}
-const TextureMixin = {
-  constructor(width, height, pos) {
-    this.image.style.width = width + "px";
-    this.image.style.height = height + "px";
-    this.image.style.left = pos.x + "px";
-    this.image.style.top = pos.y + "px";
-  },
-};
-const EventObjectMixin = {
-  constructor() {
-    this.image.addEventListener("mousedown", this.onMouseDown.bind(this));
-  },
-  onMouseDown(e) {
-    this.onMouseDownCallback(e);
-  },
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////-->CLASSES
-
-/////// variables
-var _root;
-var offset = {
-  x: 0,
-  y: 0,
-};
 var _editor = new Editor();
-////// variables
 
 document.addEventListener("DOMContentLoaded", function (event) {
   _root = document.getElementById("root");
@@ -125,7 +17,7 @@ function dropHandler(ev) {
       if (item.kind === "file" && item.type === "image/png") {
         const file = item.getAsFile();
 
-        const sprite = new Sprite(file, 50, 50, {
+        const sprite = new Sprite(file, 80, 80, {
           x: ev.clientX,
           y: ev.clientY,
         });

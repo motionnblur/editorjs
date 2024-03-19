@@ -60,6 +60,12 @@ class Editor {
     selectAreaDiv.style.width = width + "px";
     selectAreaDiv.style.height = height + "px";
   }
+  HideSelectArea() {
+    selectAreaDiv.style.display = "none";
+  }
+  ShowSelectArea() {
+    selectAreaDiv.style.display = "block";
+  }
   DoSelect(firstAreaPos, lastAreaPos) {
     const minX = Math.min(firstAreaPos.x, lastAreaPos.x);
     const maxX = Math.max(firstAreaPos.x, lastAreaPos.x);

@@ -1,5 +1,8 @@
 function onMouseDownRoot(e) {
   UpdateMousePosGlobally(e);
+  _editor.ShowSelectArea();
+  isMouseDown = true;
+
   lastMousePos = {
     x: e.clientX,
     y: e.clientY,
@@ -16,6 +19,9 @@ function onMouseDownRoot(e) {
 }
 function onMouseUpRoot(e) {
   UpdateMousePosGlobally(e);
+  isMouseDown = false;
+  _editor.HideSelectArea();
+
   if (_editor.HasCurrentSpriteSelected()) {
     const currentSelectedSprite = _editor.GetCurrentSelectedSprite();
     if (currentSelectedSprite.isDraggable()) {
@@ -36,7 +42,9 @@ function onMouseMoveRoot(e) {
       );
     }
   }
-  _editor.DrawSelectArea(mousePos, lastMousePos);
+  if (isMouseDown) {
+    _editor.DrawSelectArea(mousePos, lastMousePos);
+  }
 }
 
 function UpdateMousePosGlobally(e) {

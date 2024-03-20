@@ -8,4 +8,4 @@ var lastMousePos = {
   y: 0,
 };
 var selectAreaDiv = null;
-var isMouseDown = false;
+var isMouseDownBefore = false;

@@ -1,28 +1,43 @@
 function onMouseDownRoot(e) {
   UpdateMousePosGlobally(e);
   _editor.ShowSelectArea();
-  isMouseDown = true;
+  isMouseDownBefore = true;
 
   lastMousePos = {
     x: e.clientX,
     y: e.clientY,
   };
 
-  if (_editor.HasCurrentSpriteSelected()) {
-    const currentSelectedSprite = _editor.GetCurrentSelectedSprite();
-    if (_editor.IsPointerOnSpriteNow()) {
+  const currentSelectedSprite = _editor.GetCurrentSelectedSprite();
+
+  if (currentSelectedSprite === null) {
+    if (_editor.areSpritesSelectedAsGroup()) {
+      _editor.ClearSelectedSprites();
+      return;
+    }
+  }
+  if (_editor.areSpritesSelectedAsGroup()) {
+    if (_editor.isPointerOnSpriteNow()) {
       currentSelectedSprite.SetDraggable(true);
     } else {
-      _editor.ClearCurrentSelectedSprite();
+      _editor.ClearSelectedSprites();
+    }
+  } else {
+    if (_editor.isAnySpriteSelectedBeforeAndStillThere()) {
+      if (_editor.isPointerOnSpriteNow()) {
+        currentSelectedSprite.SetDraggable(true);
+      } else {
+        _editor.ClearCurrentSelectedSprite();
+      }
     }
   }
 }
 function onMouseUpRoot(e) {
   UpdateMousePosGlobally(e);
-  isMouseDown = false;
+  isMouseDownBefore = false;
   _editor.HideSelectArea();
 
-  if (_editor.HasCurrentSpriteSelected()) {
+  if (_editor.isAnySpriteSelectedBeforeAndStillThere()) {
     const currentSelectedSprite = _editor.GetCurrentSelectedSprite();
     if (currentSelectedSprite.isDraggable()) {
       currentSelectedSprite.SetDraggable(false);
@@ -32,7 +47,7 @@ function onMouseUpRoot(e) {
 
 function onMouseMoveRoot(e) {
   UpdateMousePosGlobally(e);
-  if (_editor.HasCurrentSpriteSelected()) {
+  if (_editor.isAnySpriteSelectedBeforeAndStillThere()) {
     const currentSelectedSprite = _editor.GetCurrentSelectedSprite();
     if (currentSelectedSprite.isDraggable()) {
       currentSelectedSprite.SetSpritePosition(
@@ -41,9 +56,11 @@ function onMouseMoveRoot(e) {
         _editor.GetMouseOffsetFromSprite()
       );
     }
-  }
-  if (isMouseDown) {
-    _editor.DrawSelectArea(mousePos, lastMousePos);
+  } else {
+    if (isMouseDownBefore) {
+      _editor.DrawSelectArea(mousePos, lastMousePos);
+      _editor.DoSelect(mousePos, lastMousePos);
+    }
   }
 }
 

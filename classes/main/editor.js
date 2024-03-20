@@ -1,14 +1,16 @@
 class Editor {
   constructor() {
     this.spriteArray = [];
+    this.currentSelectedSpritesArray = [];
     this.currentSelectedSprite = null;
     this.mouseOffsetFromSprite = {
       x: 0,
       y: 0,
     };
-    this.hasCurrentSpriteSelected = false;
+    this.isAnySpriteSelectedBefore = false;
+    this.areSpritesSelectedAsGroupBool = false;
   }
-  IsPointerOnSpriteNow() {
+  isPointerOnSpriteNow() {
     return (
       mousePos.x >= this.currentSelectedSprite.image.offsetLeft &&
       mousePos.x <=
@@ -20,8 +22,8 @@ class Editor {
           this.currentSelectedSprite.image.offsetHeight
     );
   }
-  HasCurrentSpriteSelected() {
-    return this.hasCurrentSpriteSelected;
+  isAnySpriteSelectedBeforeAndStillThere() {
+    return this.isAnySpriteSelectedBefore;
   }
   SetMouseOffsetFromSprite(mosePosX, mousePosY, currentSpritePos) {
     this.mouseOffsetFromSprite = {
@@ -29,19 +31,27 @@ class Editor {
       y: mousePosY - currentSpritePos.y,
     };
   }
+  DestroyAllSelectedSprites() {
+    this.currentSelectedSpritesArray.forEach((sprite) => {
+      sprite.Destroy();
+    });
+    this.currentSelectedSpritesArray = [];
+    this.areSpritesSelectedAsGroupBool = false;
+  }
   GetMouseOffsetFromSprite() {
     return this.mouseOffsetFromSprite;
   }
   SetCurrentSelectedSprite(sprite) {
     this.currentSelectedSprite = sprite;
-    this.hasCurrentSpriteSelected = true;
+    this.isAnySpriteSelectedBefore = true;
   }
   GetCurrentSelectedSprite() {
     return this.currentSelectedSprite;
   }
   ClearCurrentSelectedSprite() {
+    this.currentSelectedSprite.SelfDeselect();
     this.currentSelectedSprite = null;
-    this.hasCurrentSpriteSelected = false;
+    this.isAnySpriteSelectedBefore = false;
   }
   AddSpriteToArray(sprite) {
     this.spriteArray.push(sprite);
@@ -70,15 +80,20 @@ class Editor {
   ShowSelectArea() {
     selectAreaDiv.style.display = "block";
   }
+  areSpritesSelectedAsGroup() {
+    return this.areSpritesSelectedAsGroupBool;
+  }
   DoSelect(firstAreaPos, lastAreaPos) {
     const minX = Math.min(firstAreaPos.x, lastAreaPos.x);
     const maxX = Math.max(firstAreaPos.x, lastAreaPos.x);
     const minY = Math.min(firstAreaPos.y, lastAreaPos.y);
     const maxY = Math.max(firstAreaPos.y, lastAreaPos.y);
 
-    this.sprites.forEach((sprite) => {
-      const spriteCenterX = sprite.posX + sprite.width / 2;
-      const spriteCenterY = sprite.posY + sprite.height / 2;
+    this.spriteArray.forEach((sprite) => {
+      const spriteCenterX =
+        sprite.GetSpritePosition().x + sprite.GetSpriteWidth() / 2;
+      const spriteCenterY =
+        sprite.GetSpritePosition().y + sprite.GetSpriteHeight() / 2;
 
       if (
         spriteCenterX >= minX &&
@@ -87,10 +102,21 @@ class Editor {
         spriteCenterY <= maxY
       ) {
         sprite.SelectSprite();
+        this.currentSelectedSpritesArray.push(sprite);
+        this.areSpritesSelectedAsGroupBool = true;
       } else {
         sprite.DeSelectSprite();
+        this.currentSelectedSpritesArray =
+          this.currentSelectedSpritesArray.filter((s) => s !== sprite);
       }
     });
+  }
+  ClearSelectedSprites() {
+    this.spriteArray.forEach((sprite) => {
+      sprite.DeSelectSprite();
+    });
+    this.areSpritesSelectedAsGroupBool = false;
+    this.isAnySpriteSelectedBefore = false;
   }
 
   onMouseDownCallback(e, obj) {
@@ -99,6 +125,20 @@ class Editor {
       e.clientY,
       obj.GetSpritePosition()
     );
+
+    if (_editor.areSpritesSelectedAsGroup()) {
+      _editor.ClearSelectedSprites();
+      obj.SelectSprite();
+      this.SetCurrentSelectedSprite(obj);
+      return;
+    }
+
+    if (this.isAnySpriteSelectedBeforeAndStillThere()) {
+      const spriteSelected = this.GetCurrentSelectedSprite();
+      if (spriteSelected !== obj) {
+        spriteSelected.DeSelectSprite();
+      }
+    }
     this.SetCurrentSelectedSprite(obj);
   }
 }

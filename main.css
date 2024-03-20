@@ -22,12 +22,6 @@ body {
   z-index: 5;
 }
 
-.onMouseDownAnim {
-  transition: transform 0.3s;
-}
-.onMouseDownAnim:hover {
-  transform: scale(1.05);
-}
 .selection-area {
   position: absolute;
   background-color: rgba(166, 228, 247, 0.5);

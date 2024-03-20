@@ -20,7 +20,6 @@ class Sprite {
     img.draggable = false;
 
     img.classList.add("img");
-    img.classList.add("onMouseDownAnim");
 
     img.style.position = "absolute";
     img.style.left = pos.x + "px";
